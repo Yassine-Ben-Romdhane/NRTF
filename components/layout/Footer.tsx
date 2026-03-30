@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail } from "lucide-react";
+import { Mail, Instagram, Linkedin } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export default function Footer() {
@@ -41,6 +41,39 @@ export default function Footer() {
                   {org}
                 </span>
               ))}
+            </div>
+
+            {/* Social links */}
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.instagram.com/national.retech.fusion/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-nrtf-muted/50 hover:text-nrtf-light transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram size={18} />
+              </a>
+              <a
+                href="https://linkedin.com/company/YOUR_HANDLE"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-nrtf-muted/50 hover:text-nrtf-light transition-colors"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={18} />
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61556516330833"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-nrtf-muted/50 hover:text-nrtf-light transition-colors"
+                aria-label="Facebook"
+              >
+                <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+              </a>
             </div>
 
             {/* General email */}
