@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Theme CSS variables ──────────────────────────────────────────── */
+
+:root {
+  /* HSL channels — consumed by Tailwind: hsl(var(--nrtf-X) / alpha) */
+  --nrtf-bg:        222 47% 11%;    /* #0f172a */
+  --nrtf-surface:   212 47% 9%;     /* #0d1b2a */
+  --nrtf-primary:   185 100% 28%;   /* #00818f */
+  --nrtf-secondary: 213 75% 15%;    /* #0a1f44 */
+  --nrtf-accent:    152 61% 28%;    /* #137c55 */
+  --nrtf-light:     176 60% 63%;    /* #6dd9cf */
+  --nrtf-text:      210 40% 98%;    /* #f8fafc */
+  --nrtf-muted:     176 60% 63%;    /* #6dd9cf */
+
+  /* Space-separated RGB channels for rgb(var(--rgb-X) / alpha) inline usage */
+  --rgb-bg:         15 23 42;
+  --rgb-surface:    13 27 42;
+  --rgb-text:       248 250 252;
+  --rgb-border:     255 255 255;
+}
+
+
+/* ── Base ──────────────────────────────────────────────────────────── */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: hsl(var(--nrtf-bg));
+  color: hsl(var(--nrtf-text));
+  font-family: var(--font-alro), system-ui, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Custom scrollbar ──────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--nrtf-bg));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--nrtf-primary));
+  border-radius: 3px;
+}
+
+/* ── Utilities ─────────────────────────────────────────────────────── */
+
+.gradient-text {
+  background: linear-gradient(135deg, #6dd9cf 0%, #6dd9cf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+.gradient-text-vivid {
+  background: linear-gradient(90deg, #6dd9cf 0%, #6dd9cf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+.glass {
+  background: rgba(109, 217, 207, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(109, 217, 207, 0.2);
+}
+
+
+.glow-teal,
+.glow-cyan,
+.glow-green {
+  box-shadow: 0 0 20px rgba(109, 217, 207, 0.12), inset 0 0 20px rgba(109, 217, 207, 0.02);
+}
+
+/* ── Animations ────────────────────────────────────────────────────── */
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* Kept for backward compat with any remaining .reveal usage */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Misc ──────────────────────────────────────────────────────────── */
+
+.wave-divider {
+  overflow: hidden;
+  line-height: 0;
+}
+
+@layer utilities {
+  .italic-display {
+    font-family: var(--font-alro);
+    font-style: italic;
+  }
+}

@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+/.next/
+/out/
+
+# Build artifacts
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment variables — never commit real credentials
+.env
+.env.local
+.env.*.local
+
+# Vercel
+.vercel
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+data/*.db
+
+# Dev artifacts (screenshots, notes, reference files)
+dev-screenshots/
+Refs/
+
+# AI / tooling session data
+agent-skills/
+.playwright/
+.playwright-cli/
+.superpowers/
+.claude/
+
+# Test-only API routes (keep locally, never deploy)
+app/api/test-sheets/
