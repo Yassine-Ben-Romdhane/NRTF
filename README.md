@@ -13,14 +13,19 @@
 
 1. Clone the repo
 2. Install dependencies:
+
    ```bash
    npm install
    ```
+
 3. Copy the environment template and fill in your credentials:
+
    ```bash
    cp .env.example .env.local
    ```
+
 4. Run the dev server:
+
    ```bash
    npm run dev
    ```

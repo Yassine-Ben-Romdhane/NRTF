@@ -41,8 +41,8 @@ const inputCls = "w-full bg-white/5 border border-[rgba(109,217,207,0.15)] round
 
 const INFO_CARDS = [
   { Icon: Calendar, title: "1–3 May 2026", sub: "Three days of innovation" },
-  { Icon: MapPin,   title: "INSAT, Tunis", sub: "Institut National des Sciences Appliquées" },
-  { Icon: Ticket,   title: "Free Entry",   sub: "Open to all students and professionals" },
+  { Icon: MapPin, title: "INSAT, Tunis", sub: "Institut National des Sciences Appliquées" },
+  { Icon: Ticket, title: "Free Entry", sub: "Open to all students and professionals" },
 ];
 
 export default function Register() {
@@ -133,7 +133,7 @@ export default function Register() {
             <div className="lg:w-[65%]">
               <form onSubmit={handleSubmit} className="reveal space-y-6">
                 <div className="grid sm:grid-cols-2 gap-5">
-                  <Field label="Full Name *" error={errors.full_name}><input className={inputCls} placeholder="e.g. Ons Sassi" value={form.full_name} onChange={(e) => set("full_name", e.target.value)} /></Field>
+                  <Field label="Full Name *" error={errors.full_name}><input className={inputCls} placeholder="e.g. Foulen Ben Falten" value={form.full_name} onChange={(e) => set("full_name", e.target.value)} /></Field>
                   <Field label="Email *" error={errors.email}><input className={inputCls} type="email" placeholder="you@email.com" value={form.email} onChange={(e) => set("email", e.target.value)} /></Field>
                   <Field label="Phone Number *" error={errors.phone}><input className={inputCls} type="tel" placeholder="+216 XX XXX XXX" value={form.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
                   <Field label="University / Institution *" error={errors.university}><input className={inputCls} placeholder="e.g. INSAT" value={form.university} onChange={(e) => set("university", e.target.value)} /></Field>
