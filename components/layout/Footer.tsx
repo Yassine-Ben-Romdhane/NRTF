@@ -1,7 +1,6 @@
 "use client";
 
 import { Mail } from "lucide-react";
-import NRTFLogo from "@/components/ui/NRTFLogo";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 export default function Footer() {
@@ -22,7 +21,8 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Logo + name */}
             <div className="flex items-center gap-3">
-              <NRTFLogo size={48} showText={false} />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-mark.png" alt="NRTF Logo" width={48} style={{ background: "transparent" }} />
               <div>
                 <div className="font-display font-bold text-base gradient-text">
                   National Re-Tech Fusion
