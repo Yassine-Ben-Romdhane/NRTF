@@ -115,4 +115,12 @@ body {
     font-family: var(--font-alro);
     font-style: italic;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

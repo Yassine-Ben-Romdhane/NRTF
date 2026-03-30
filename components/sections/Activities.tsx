@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, useInView } from "framer-motion";
 import { WipeReveal } from "@/components/ui/type-reveal";
 import {
@@ -121,31 +121,47 @@ const activities: Activity[] = [
   },
 ];
 
+const CARD_WIDTH = 300;
+const CARD_GAP = 20;
+
 /* ── Single event card ─────────────────────────────────────────────── */
 function EventCard({
   activity,
-  isCenter,
+  isActive,
+  index,
 }: {
   activity: Activity;
-  isCenter: boolean;
+  isActive: boolean;
+  index: number;
 }) {
   const { tag, tagline, desc, accent, day, time, Icon } = activity;
 
   return (
-    <div
-      className="flex flex-col gap-5 p-7 h-full"
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      animate={{
+        scale: isActive ? 1 : 0.95,
+        opacity: isActive ? 1 : 0.55,
+      }}
+      whileHover={{ scale: 1.02, opacity: 1 }}
+      className="flex flex-col gap-5 p-7 h-full select-none"
       style={{
-        background: isCenter
+        width: CARD_WIDTH,
+        minWidth: CARD_WIDTH,
+        background: isActive
           ? `linear-gradient(160deg, hsl(var(--nrtf-surface)) 0%, color-mix(in srgb, ${accent} 9%, hsl(var(--nrtf-surface))) 100%)`
           : "hsl(var(--nrtf-surface))",
         borderRadius: "1.125rem",
-        border: isCenter
+        border: isActive
           ? `1px solid ${accent}45`
           : "1px solid rgba(255,255,255,0.06)",
-        boxShadow: isCenter
+        boxShadow: isActive
           ? `0 24px 80px ${accent}18, 0 0 0 1px ${accent}12`
           : "none",
-        minHeight: isCenter ? "420px" : "370px",
+        transition: "background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease",
       }}
     >
       {/* Tag + day */}
@@ -153,17 +169,21 @@ function EventCard({
         <span
           className="text-[10px] font-sans font-bold uppercase tracking-[0.2em] px-3 py-1"
           style={{
-            border: `1px solid ${accent}${isCenter ? "40" : "25"}`,
-            color: isCenter ? accent : `${accent}70`,
-            background: `${accent}${isCenter ? "14" : "0a"}`,
+            border: `1px solid ${accent}${isActive ? "40" : "25"}`,
+            color: isActive ? accent : `${accent}70`,
+            background: `${accent}${isActive ? "14" : "0a"}`,
             borderRadius: "6px",
+            transition: "all 0.4s ease",
           }}
         >
           {tag}
         </span>
         <span
           className="text-[10px] font-sans uppercase tracking-widest"
-          style={{ color: isCenter ? "rgba(248,250,252,0.4)" : "rgba(248,250,252,0.2)" }}
+          style={{
+            color: isActive ? "rgba(248,250,252,0.4)" : "rgba(248,250,252,0.2)",
+            transition: "color 0.4s ease",
+          }}
         >
           Day {day} · {time}
         </span>
@@ -172,12 +192,12 @@ function EventCard({
       {/* Icon */}
       <div className="flex-1 flex items-center justify-center py-4">
         <Icon
-          size={isCenter ? 92 : 72}
+          size={isActive ? 80 : 64}
           strokeWidth={1.15}
           style={{
-            color: isCenter ? accent : `${accent}45`,
-            filter: isCenter ? `drop-shadow(0 0 28px ${accent}45)` : "none",
-            transition: "all 0.5s",
+            color: isActive ? accent : `${accent}45`,
+            filter: isActive ? `drop-shadow(0 0 28px ${accent}45)` : "none",
+            transition: "all 0.4s ease",
           }}
         />
       </div>
@@ -186,7 +206,8 @@ function EventCard({
       <h3
         className="font-display font-bold text-xl leading-snug text-center"
         style={{
-          color: isCenter ? "rgba(248,250,252,0.95)" : "rgba(248,250,252,0.38)",
+          color: isActive ? "rgba(248,250,252,0.95)" : "rgba(248,250,252,0.38)",
+          transition: "color 0.4s ease",
         }}
       >
         {tagline}
@@ -196,24 +217,66 @@ function EventCard({
       <p
         className="font-sans text-sm leading-relaxed text-center"
         style={{
-          color: isCenter ? "rgba(248,250,252,0.55)" : "rgba(248,250,252,0.2)",
+          color: isActive ? "rgba(248,250,252,0.55)" : "rgba(248,250,252,0.2)",
+          transition: "color 0.4s ease",
         }}
       >
         {desc}
       </p>
-    </div>
+    </motion.div>
   );
 }
 
 /* ── Main section ──────────────────────────────────────────────────── */
 export default function Activities() {
   const headerRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const headerInView = useInView(headerRef, { once: true, margin: "-60px" });
   const [activeIdx, setActiveIdx] = useState(0);
-  const n = activities.length;
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const navigate = (dir: -1 | 1) => {
-    setActiveIdx((i) => (i + dir + n) % n);
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    setCanScrollLeft(el.scrollLeft > 5);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 5);
+
+    // Determine which card is closest to center
+    const center = el.scrollLeft + el.clientWidth / 2;
+    const cardStep = CARD_WIDTH + CARD_GAP;
+    // Account for the initial padding
+    const paddingLeft = el.clientWidth / 2 - CARD_WIDTH / 2;
+    const idx = Math.round((center - paddingLeft - CARD_WIDTH / 2) / cardStep);
+    setActiveIdx(Math.max(0, Math.min(idx, activities.length - 1)));
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    updateScrollState();
+    return () => el.removeEventListener("scroll", updateScrollState);
+  }, [updateScrollState]);
+
+  const scrollTo = (dir: -1 | 1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({
+      left: dir * (CARD_WIDTH + CARD_GAP),
+      behavior: "smooth",
+    });
+  };
+
+  const scrollToCard = (idx: number) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const paddingLeft = el.clientWidth / 2 - CARD_WIDTH / 2;
+    el.scrollTo({
+      left: idx * (CARD_WIDTH + CARD_GAP) - paddingLeft + CARD_WIDTH / 2,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -235,14 +298,14 @@ export default function Activities() {
         }}
       />
 
-      <div className="w-full px-8 md:px-16 lg:px-24">
+      <div className="w-full">
         {/* ── Header ── */}
         <motion.div
           ref={headerRef}
           initial={{ opacity: 0, y: 20 }}
           animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="mb-16 text-center"
+          className="mb-16 text-center px-8 md:px-16 lg:px-24"
         >
           <WipeReveal delay={100}>
             <h2 className="font-display text-4xl md:text-5xl text-nrtf-text leading-tight">
@@ -274,49 +337,65 @@ export default function Activities() {
           </motion.p>
         </motion.div>
 
-        {/* ── Carousel ── */}
-        <div className="flex items-end justify-center gap-3 md:gap-5 overflow-visible pb-10">
-          {([-1, 0, 1] as const).map((offset) => {
-            const idx = (activeIdx + offset + n) % n;
-            const activity = activities[idx];
-            const isCenter = offset === 0;
+        {/* ── Horizontal scroll area ── */}
+        <div className="relative">
+          {/* Fade edges */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-16 md:w-32 z-10 pointer-events-none"
+            style={{
+              background: "linear-gradient(to right, hsl(var(--nrtf-bg)), transparent)",
+              opacity: canScrollLeft ? 1 : 0,
+              transition: "opacity 0.3s ease",
+            }}
+          />
+          <div
+            className="absolute right-0 top-0 bottom-0 w-16 md:w-32 z-10 pointer-events-none"
+            style={{
+              background: "linear-gradient(to left, hsl(var(--nrtf-bg)), transparent)",
+              opacity: canScrollRight ? 1 : 0,
+              transition: "opacity 0.3s ease",
+            }}
+          />
 
-            return (
-              <motion.div
-                key={`slot-${offset}`}
-                className={`flex-shrink-0 ${offset !== 0 ? "hidden sm:block" : ""}`}
-                style={{
-                  width: isCenter ? "min(320px, 88vw)" : "min(265px, 28vw)",
-                  zIndex: isCenter ? 2 : 1,
-                }}
-                animate={{
-                  y: isCenter ? -28 : 22,
-                  scale: isCenter ? 1 : 0.88,
-                  opacity: isCenter ? 1 : 0.52,
-                }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          <div
+            ref={scrollRef}
+            className="flex items-stretch overflow-x-auto pb-8 scrollbar-hide cursor-grab active:cursor-grabbing"
+            style={{
+              gap: CARD_GAP,
+              scrollSnapType: "x mandatory",
+              WebkitOverflowScrolling: "touch",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              paddingLeft: `max(2rem, calc(50vw - ${CARD_WIDTH / 2}px))`,
+              paddingRight: `max(2rem, calc(50vw - ${CARD_WIDTH / 2}px))`,
+            }}
+          >
+            {activities.map((activity, i) => (
+              <div
+                key={activity.id}
+                className="flex-shrink-0"
+                style={{ scrollSnapAlign: "center" }}
               >
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                >
-                  <EventCard activity={activity} isCenter={isCenter} />
-                </motion.div>
-              </motion.div>
-            );
-          })}
+                <EventCard
+                  activity={activity}
+                  isActive={i === activeIdx}
+                  index={i}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* ── Navigation ── */}
-        <div className="flex items-center justify-center gap-5 mt-2">
+        <div className="flex items-center justify-center gap-5 mt-4 px-8">
           <motion.button
-            onClick={() => navigate(-1)}
+            onClick={() => scrollTo(-1)}
             className="w-11 h-11 flex items-center justify-center rounded-full"
             style={{
               border: "1px solid rgba(255,255,255,0.12)",
-              color: "rgba(248,250,252,0.6)",
+              color: canScrollLeft ? "rgba(248,250,252,0.6)" : "rgba(248,250,252,0.15)",
+              pointerEvents: canScrollLeft ? "auto" : "none",
+              transition: "color 0.3s ease",
             }}
             whileHover={{
               scale: 1.08,
@@ -334,7 +413,7 @@ export default function Activities() {
             {activities.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActiveIdx(i)}
+                onClick={() => scrollToCard(i)}
                 style={{
                   width: i === activeIdx ? "22px" : "6px",
                   height: "6px",
@@ -351,11 +430,13 @@ export default function Activities() {
           </div>
 
           <motion.button
-            onClick={() => navigate(1)}
+            onClick={() => scrollTo(1)}
             className="w-11 h-11 flex items-center justify-center rounded-full"
             style={{
               border: "1px solid rgba(255,255,255,0.12)",
-              color: "rgba(248,250,252,0.6)",
+              color: canScrollRight ? "rgba(248,250,252,0.6)" : "rgba(248,250,252,0.15)",
+              pointerEvents: canScrollRight ? "auto" : "none",
+              transition: "color 0.3s ease",
             }}
             whileHover={{
               scale: 1.08,
@@ -375,7 +456,7 @@ export default function Activities() {
             className="font-sans text-[11px] uppercase tracking-[0.25em] tabular-nums"
             style={{ color: "rgba(248,250,252,0.28)" }}
           >
-            {String(activeIdx + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
+            {String(activeIdx + 1).padStart(2, "0")} / {String(activities.length).padStart(2, "0")}
           </span>
         </div>
       </div>
