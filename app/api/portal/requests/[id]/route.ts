@@ -28,11 +28,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ success: true });
   }
 
-  // Accept: update request status, create room, add both members
-  const { error: updateError } = await supabase.from("room_requests").update({ status: "accepted" }).eq("id", params.id);
-  if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
-
-  // Check if the requester is already in a room with space
+  // Accept: check if the requester is already in a room with space
   const { data: existingMembership } = await supabase
     .from("room_members")
     .select("room_id, rooms(capacity)")
@@ -47,7 +43,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     const mem = existingMembership as ExistingMembership;
     roomId = mem.room_id;
 
-    // Check current member count against capacity
     const { count } = await supabase
       .from("room_members")
       .select("*", { count: "exact", head: true })
@@ -61,19 +56,23 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     const { error: insertError } = await supabase.from("room_members").insert({ room_id: roomId, profile_id: user.id });
     if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 });
   } else {
-    // Create a new room
     const { data: newRoom } = await supabase
       .from("rooms")
       .insert({ capacity: 2 })
       .select()
       .single();
-    roomId = newRoom!.id;
+    if (!newRoom) return NextResponse.json({ error: "Failed to create room" }, { status: 500 });
+    roomId = newRoom.id;
     const { error: insertError } = await supabase.from("room_members").insert([
       { room_id: roomId, profile_id: request.from_id },
       { room_id: roomId, profile_id: user.id },
     ]);
     if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
+
+  // Mark as accepted only after room is successfully created
+  const { error: updateError } = await supabase.from("room_requests").update({ status: "accepted" }).eq("id", params.id);
+  if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
 
   return NextResponse.json({ success: true, room_id: roomId });
 }
