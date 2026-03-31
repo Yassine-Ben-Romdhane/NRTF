@@ -30,3 +30,6 @@ export type RoomMember = {
   profile_id: string;
   joined_at: string;
 };
+
+// Note: join-result types (MembershipWithRoom, RoommateRow, RequestRow, RoomMemberRow, MemberRow)
+// are local to their respective pages since they represent Supabase query shapes, not base table types.

@@ -1,13 +1,7 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import RoomEditor from "./RoomEditor";
-
-type RoomRow = {
-  id: string;
-  room_number: string | null;
-  capacity: number;
-  created_at: string;
-};
+import type { Room } from "@/types/portal";
 
 type MemberRow = {
   room_id: string;
@@ -44,7 +38,7 @@ export default async function AdminRoomsPage() {
         <p className="text-sm text-nrtf-muted/50 font-sans">No rooms yet. They are created when attendees accept requests.</p>
       ) : (
         <div className="flex flex-col gap-4">
-          {(rooms as RoomRow[]).map((room) => (
+          {(rooms as Room[]).map((room) => (
             <div key={room.id} className="border border-[rgba(109,217,207,0.12)] rounded-lg p-5">
               <div className="flex items-start justify-between gap-4 mb-3">
                 <div>
