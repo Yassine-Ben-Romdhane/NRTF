@@ -13,22 +13,27 @@ export default async function BrowsePage() {
     .from("room_members")
     .select("room_id, rooms(capacity)")
     .eq("profile_id", user.id)
-    .single();
+    .maybeSingle();
 
   // Get rooms that are full (member count >= capacity)
   const { data: fullRoomMembers } = await supabase
     .from("room_members")
-    .select("profile_id, room_id");
+    .select("profile_id, room_id, rooms(capacity)");
+
+  type RoomMemberRow = { profile_id: string; room_id: string; rooms: { capacity: number } | null };
+  const members = (fullRoomMembers ?? []) as RoomMemberRow[];
 
   const roomCounts: Record<string, number> = {};
-  (fullRoomMembers ?? []).forEach(({ room_id }: { room_id: string }) => {
+  const roomCapacity: Record<string, number> = {};
+  members.forEach(({ room_id, rooms }) => {
     roomCounts[room_id] = (roomCounts[room_id] ?? 0) + 1;
+    if (rooms) roomCapacity[room_id] = rooms.capacity;
   });
 
   const fullRoomProfileIds = new Set(
-    (fullRoomMembers ?? [])
-      .filter(({ room_id }: { room_id: string }) => roomCounts[room_id] >= 3)
-      .map(({ profile_id }: { profile_id: string }) => profile_id)
+    members
+      .filter(({ room_id }) => roomCounts[room_id] >= (roomCapacity[room_id] ?? 2))
+      .map(({ profile_id }) => profile_id)
   );
 
   // Get IDs we've already sent a request to (pending or accepted)

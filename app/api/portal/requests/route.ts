@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     .eq("from_id", user.id)
     .eq("to_id", to_id)
     .in("status", ["pending", "accepted"])
-    .single();
+    .maybeSingle();
 
   if (existing) return NextResponse.json({ error: "Request already exists" }, { status: 409 });
 
