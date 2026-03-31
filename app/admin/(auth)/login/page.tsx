@@ -21,7 +21,7 @@ export default function AdminLoginPage() {
 
     if (error) { setError(error.message); setLoading(false); return; }
 
-    const role = data.user?.user_metadata?.role;
+    const role = data.user?.app_metadata?.role;
     if (role !== "admin") {
       await supabase.auth.signOut();
       setError("Access denied. Admin accounts only.");
