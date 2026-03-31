@@ -9,12 +9,16 @@ export default function ActionButtons({ requestId }: { requestId: string }) {
 
   async function act(action: "accept" | "decline") {
     setLoading(action);
-    await fetch(`/api/portal/requests/${requestId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action }),
-    });
-    router.refresh();
+    try {
+      await fetch(`/api/portal/requests/${requestId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      router.refresh();
+    } finally {
+      setLoading(null);
+    }
   }
 
   return (

@@ -23,12 +23,14 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!request) return NextResponse.json({ error: "Request not found" }, { status: 404 });
 
   if (action === "decline") {
-    await supabase.from("room_requests").update({ status: "declined" }).eq("id", params.id);
+    const { error } = await supabase.from("room_requests").update({ status: "declined" }).eq("id", params.id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ success: true });
   }
 
   // Accept: update request status, create room, add both members
-  await supabase.from("room_requests").update({ status: "accepted" }).eq("id", params.id);
+  const { error: updateError } = await supabase.from("room_requests").update({ status: "accepted" }).eq("id", params.id);
+  if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
 
   // Check if the requester is already in a room with space
   const { data: existingMembership } = await supabase
@@ -44,7 +46,20 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (existingMembership) {
     const mem = existingMembership as ExistingMembership;
     roomId = mem.room_id;
-    await supabase.from("room_members").insert({ room_id: roomId, profile_id: user.id });
+
+    // Check current member count against capacity
+    const { count } = await supabase
+      .from("room_members")
+      .select("*", { count: "exact", head: true })
+      .eq("room_id", roomId);
+
+    const capacity = mem.rooms?.capacity ?? 2;
+    if ((count ?? 0) >= capacity) {
+      return NextResponse.json({ error: "Room is already full" }, { status: 409 });
+    }
+
+    const { error: insertError } = await supabase.from("room_members").insert({ room_id: roomId, profile_id: user.id });
+    if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 });
   } else {
     // Create a new room
     const { data: newRoom } = await supabase
@@ -53,10 +68,11 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       .select()
       .single();
     roomId = newRoom!.id;
-    await supabase.from("room_members").insert([
+    const { error: insertError } = await supabase.from("room_members").insert([
       { room_id: roomId, profile_id: request.from_id },
       { room_id: roomId, profile_id: user.id },
     ]);
+    if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
   return NextResponse.json({ success: true, room_id: roomId });
