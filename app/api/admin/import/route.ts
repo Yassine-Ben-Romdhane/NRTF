@@ -35,6 +35,12 @@ export async function POST(req: NextRequest) {
   }
   const serviceClient = createServiceClient();
 
+  // Pre-fetch all existing emails to avoid per-row queries
+  const { data: existingProfiles } = await serviceClient
+    .from("profiles")
+    .select("email");
+  const existingEmails = new Set((existingProfiles ?? []).map((p: { email: string }) => p.email.toLowerCase()));
+
   let imported = 0;
   let skipped = 0;
   const errors: string[] = [];
@@ -45,14 +51,7 @@ export async function POST(req: NextRequest) {
 
     const normalizedEmail = (email as string).trim().toLowerCase();
 
-    // Check if user already exists in profiles
-    const { data: existing } = await serviceClient
-      .from("profiles")
-      .select("id")
-      .eq("email", normalizedEmail)
-      .maybeSingle();
-
-    if (existing) { skipped++; continue; }
+    if (existingEmails.has(normalizedEmail)) { skipped++; continue; }
 
     // Create Supabase auth user and send invite
     const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
