@@ -12,6 +12,11 @@ export default function AdminAttendeesPage() {
     setResult(null);
     try {
       const res = await fetch("/api/admin/import", { method: "POST" });
+      if (!res.ok) {
+        const { error } = await res.json().catch(() => ({ error: "Import failed" }));
+        setResult({ imported: 0, skipped: 0, errors: [error ?? "Import failed"] });
+        return;
+      }
       const data = await res.json();
       setResult(data);
     } finally {

@@ -22,12 +22,17 @@ export async function POST(req: NextRequest) {
   if (!sheetId) return NextResponse.json({ error: "Missing GOOGLE_SHEET_ID" }, { status: 500 });
 
   const sheets = getSheets();
-  const result = await sheets.spreadsheets.values.get({
-    spreadsheetId: sheetId,
-    range: "A2:K",
-  });
-
-  const rows = result.data.values ?? [];
+  let rows: string[][];
+  try {
+    const result = await sheets.spreadsheets.values.get({
+      spreadsheetId: sheetId,
+      range: "A2:K",
+    });
+    rows = (result.data.values ?? []) as string[][];
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to read Google Sheet";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
   const serviceClient = createServiceClient();
 
   let imported = 0;
