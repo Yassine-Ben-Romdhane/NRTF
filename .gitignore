@@ -30,6 +30,9 @@ data/*.db
 dev-screenshots/
 Refs/
 
+# Git worktrees
+.worktrees/
+
 # AI / tooling session data
 agent-skills/
 .playwright/
