@@ -2,6 +2,15 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
+type MembershipWithRoom = {
+  room_id: string;
+  rooms: { room_number: string | null; capacity: number } | null;
+};
+
+type RoommateRow = {
+  profiles: { full_name: string; university: string; id: string } | null;
+};
+
 export default async function PortalDashboard() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -22,14 +31,16 @@ export default async function PortalDashboard() {
     .single();
 
   // Load roommates if matched
-  let roommates: { full_name: string; university: string }[] = [];
+  let roommates: { id: string; full_name: string; university: string }[] = [];
   if (membership) {
     const { data } = await supabase
       .from("room_members")
-      .select("profiles(full_name, university)")
-      .eq("room_id", (membership as any).room_id)
+      .select("profiles(id, full_name, university)")
+      .eq("room_id", (membership as MembershipWithRoom).room_id)
       .neq("profile_id", user.id);
-    roommates = (data ?? []).map((d: any) => d.profiles);
+    roommates = (data ?? [])
+      .map((d) => (d as RoommateRow).profiles)
+      .filter((p): p is { full_name: string; university: string; id: string } => p !== null);
   }
 
   // Count pending incoming requests
@@ -69,9 +80,9 @@ export default async function PortalDashboard() {
       {membership ? (
         <div className="border border-[rgba(109,217,207,0.2)] rounded-lg p-6 mb-6">
           <div className="text-xs font-sans text-nrtf-muted/50 mb-3 uppercase tracking-wider">Your Room</div>
-          {(membership as any).rooms?.room_number ? (
+          {(membership as MembershipWithRoom).rooms?.room_number ? (
             <div className="text-2xl font-display font-bold gradient-text mb-4">
-              Room {(membership as any).rooms.room_number}
+              Room {(membership as MembershipWithRoom).rooms?.room_number}
             </div>
           ) : (
             <div className="text-sm text-nrtf-muted/50 font-sans mb-4">Room number will be assigned by the organizers.</div>
@@ -81,7 +92,7 @@ export default async function PortalDashboard() {
             <p className="text-sm text-nrtf-muted/40 font-sans">No other roommates yet.</p>
           ) : (
             roommates.map(r => (
-              <div key={r.full_name} className="text-sm text-nrtf-text font-sans">
+              <div key={r.id} className="text-sm text-nrtf-text font-sans">
                 {r.full_name} · <span className="text-nrtf-muted/50">{r.university}</span>
               </div>
             ))
