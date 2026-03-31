@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import RoomEditor from "./RoomEditor";
 
@@ -15,7 +15,7 @@ type MemberRow = {
 };
 
 export default async function AdminRoomsPage() {
-  const supabase = createClient();
+  const supabase = createServiceClient();
 
   const { data: rooms } = await supabase
     .from("rooms")

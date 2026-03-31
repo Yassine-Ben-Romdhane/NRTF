@@ -17,6 +17,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: "No fields to update" }, { status: 400 });
   }
 
+  if (updates.capacity !== undefined && ![2, 3].includes(updates.capacity as number)) {
+    return NextResponse.json({ error: "capacity must be 2 or 3" }, { status: 400 });
+  }
+
   // Use service client for the update (bypasses RLS)
   const serviceClient = createServiceClient();
   const { error } = await serviceClient.from("rooms").update(updates).eq("id", params.id);

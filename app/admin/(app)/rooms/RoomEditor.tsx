@@ -11,15 +11,22 @@ export default function RoomEditor({
   const [number, setNumber] = useState(currentNumber ?? "");
   const [capacity, setCapacity] = useState(currentCapacity);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function save() {
     setSaving(true);
+    setError(null);
     try {
-      await fetch(`/api/admin/rooms/${roomId}`, {
+      const res = await fetch(`/api/admin/rooms/${roomId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ room_number: number || null, capacity }),
       });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Save failed");
+        return;
+      }
       setEditing(false);
       router.refresh();
     } finally {
@@ -50,6 +57,7 @@ export default function RoomEditor({
         {saving ? "…" : "Save"}
       </button>
       <button onClick={() => setEditing(false)} className="text-xs text-nrtf-muted/50 font-sans">Cancel</button>
+      {error && <span className="text-xs text-red-400 font-sans">{error}</span>}
     </div>
   );
 }
