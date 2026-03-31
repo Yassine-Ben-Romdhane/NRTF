@@ -104,6 +104,10 @@ export default function Register() {
             </div>
             <h3 className="font-display font-bold text-2xl text-nrtf-text">You&apos;re registered!</h3>
             <p className="text-nrtf-muted/70 max-w-sm">{message}</p>
+            <p className="text-nrtf-muted/50 text-xs max-w-sm mt-2 font-sans">
+              Once you receive your invite email, you can find a roommate at{" "}
+              <a href="/portal" className="underline hover:text-nrtf-light transition-colors">/portal</a>.
+            </p>
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
