@@ -42,8 +42,9 @@ export default function PortalLoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-xs text-nrtf-muted/60 mb-1.5 font-sans">Email</label>
+            <label htmlFor="email" className="block text-xs text-nrtf-muted/60 mb-1.5 font-sans">Email</label>
             <input
+              id="email"
               type="email"
               required
               value={email}
@@ -54,8 +55,9 @@ export default function PortalLoginPage() {
           </div>
 
           <div>
-            <label className="block text-xs text-nrtf-muted/60 mb-1.5 font-sans">Password</label>
+            <label htmlFor="password" className="block text-xs text-nrtf-muted/60 mb-1.5 font-sans">Password</label>
             <input
+              id="password"
               type="password"
               required
               value={password}
