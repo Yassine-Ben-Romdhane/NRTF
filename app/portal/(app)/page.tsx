@@ -36,10 +36,10 @@ export default async function PortalDashboard() {
     const { data } = await supabase
       .from("room_members")
       .select("profiles(id, full_name, university)")
-      .eq("room_id", (membership as MembershipWithRoom).room_id)
+      .eq("room_id", (membership as unknown as MembershipWithRoom).room_id)
       .neq("profile_id", user.id);
     roommates = (data ?? [])
-      .map((d) => (d as RoommateRow).profiles)
+      .map((d) => (d as unknown as RoommateRow).profiles)
       .filter((p): p is { full_name: string; university: string; id: string } => p !== null);
   }
 
@@ -80,9 +80,9 @@ export default async function PortalDashboard() {
       {membership ? (
         <div className="border border-[rgba(109,217,207,0.2)] rounded-lg p-6 mb-6">
           <div className="text-xs font-sans text-nrtf-muted/50 mb-3 uppercase tracking-wider">Your Room</div>
-          {(membership as MembershipWithRoom).rooms?.room_number ? (
+          {(membership as unknown as MembershipWithRoom).rooms?.room_number ? (
             <div className="text-2xl font-display font-bold gradient-text mb-4">
-              Room {(membership as MembershipWithRoom).rooms?.room_number}
+              Room {(membership as unknown as MembershipWithRoom).rooms?.room_number}
             </div>
           ) : (
             <div className="text-sm text-nrtf-muted/50 font-sans mb-4">Room number will be assigned by the organizers.</div>

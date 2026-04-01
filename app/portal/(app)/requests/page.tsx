@@ -36,7 +36,7 @@ export default async function RequestsPage() {
         <p className="text-sm text-nrtf-muted/40 font-sans mb-8">No pending requests.</p>
       ) : (
         <div className="flex flex-col gap-4 mb-8">
-          {(pending as RequestRow[]).map((r) => (
+          {(pending as unknown as RequestRow[]).map((r) => (
             <div key={r.id} className="border border-[rgba(109,217,207,0.15)] rounded-lg p-5 flex items-start justify-between gap-4">
               <div>
                 <div className="font-sans font-medium text-nrtf-text text-sm">{r.profiles.full_name}</div>
@@ -55,7 +55,7 @@ export default async function RequestsPage() {
         <>
           <h2 className="text-xs font-sans uppercase tracking-wider text-nrtf-muted/50 mb-4">Past</h2>
           <div className="flex flex-col gap-3">
-            {(past as RequestRow[]).map((r) => (
+            {(past as unknown as RequestRow[]).map((r) => (
               <div key={r.id} className="border border-[rgba(255,255,255,0.05)] rounded-lg p-4 flex items-center justify-between">
                 <div className="text-sm font-sans text-nrtf-muted/60">{r.profiles.full_name}</div>
                 <span className={`text-xs font-sans px-2 py-0.5 rounded ${r.status === "accepted" ? "text-green-400" : "text-nrtf-muted/40"}`}>

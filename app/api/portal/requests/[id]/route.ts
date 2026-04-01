@@ -40,7 +40,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   type ExistingMembership = { room_id: string; rooms: { capacity: number } | null };
 
   if (existingMembership) {
-    const mem = existingMembership as ExistingMembership;
+    const mem = existingMembership as unknown as ExistingMembership;
     roomId = mem.room_id;
 
     const { count } = await supabase
