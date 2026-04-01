@@ -1,59 +1,82 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
+import { createServiceClient } from "@/lib/supabase/server";
+import type { PendingAttendee } from "@/types/portal";
+import ImportButton from "./ImportButton";
+import ConfirmButton from "./ConfirmButton";
 
-export default function AdminAttendeesPage() {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ imported: number; skipped: number; errors: string[] } | null>(null);
+export const dynamic = "force-dynamic";
 
-  async function runImport() {
-    setLoading(true);
-    setResult(null);
-    try {
-      const res = await fetch("/api/admin/import", { method: "POST" });
-      if (!res.ok) {
-        const { error } = await res.json().catch(() => ({ error: "Import failed" }));
-        setResult({ imported: 0, skipped: 0, errors: [error ?? "Import failed"] });
-        return;
-      }
-      const data = await res.json();
-      setResult(data);
-    } finally {
-      setLoading(false);
-    }
-  }
+export default async function AdminAttendeesPage() {
+  const serviceClient = createServiceClient();
+
+  const [{ data: pending }, { count: confirmedCount }] = await Promise.all([
+    serviceClient
+      .from("pending_attendees")
+      .select("*")
+      .order("imported_at", { ascending: true })
+      .returns<PendingAttendee[]>(),
+    serviceClient
+      .from("profiles")
+      .select("*", { count: "exact", head: true }),
+  ]);
+
+  const pendingList = pending ?? [];
 
   return (
-    <main className="min-h-screen px-8 py-12 max-w-2xl mx-auto">
+    <main className="min-h-screen px-8 py-12 max-w-3xl mx-auto">
       <div className="flex items-center gap-4 mb-8">
         <Link href="/admin" className="text-xs text-nrtf-muted/50 hover:text-nrtf-muted font-sans">← Back</Link>
         <h1 className="font-display font-bold text-2xl text-nrtf-text">Attendees</h1>
       </div>
 
+      <div className="flex gap-4 mb-6">
+        <div className="border border-[rgba(109,217,207,0.12)] rounded-lg px-5 py-4 flex-1 font-sans">
+          <div className="text-2xl font-bold text-nrtf-text">{pendingList.length}</div>
+          <div className="text-xs text-nrtf-muted/50 mt-1">Pending (awaiting payment)</div>
+        </div>
+        <div className="border border-[rgba(109,217,207,0.12)] rounded-lg px-5 py-4 flex-1 font-sans">
+          <div className="text-2xl font-bold text-nrtf-text">{confirmedCount ?? 0}</div>
+          <div className="text-xs text-nrtf-muted/50 mt-1">Confirmed (invited)</div>
+        </div>
+      </div>
+
       <div className="border border-[rgba(109,217,207,0.12)] rounded-lg p-6 mb-6">
         <h2 className="font-sans font-medium text-nrtf-text text-sm mb-2">Import from Google Sheet</h2>
         <p className="text-xs text-nrtf-muted/50 font-sans mb-4">
-          Pulls all registrations, creates accounts, and sends invite emails. Already-imported attendees are skipped.
+          Pulls registrations into the pending list. Confirm each attendee individually after they pay.
         </p>
-        <button onClick={runImport} disabled={loading}
-          className="px-5 py-2 rounded font-sans text-sm font-medium disabled:opacity-50"
-          style={{ background: "linear-gradient(135deg, #137c55, #6dd9cf)", color: "#fff" }}>
-          {loading ? "Importing…" : "Run Import"}
-        </button>
+        <ImportButton />
       </div>
 
-      {result && (
-        <div className="border border-[rgba(109,217,207,0.12)] rounded-lg p-5 text-sm font-sans">
-          <div className="text-nrtf-text mb-1">✓ Imported: <strong>{result.imported}</strong></div>
-          <div className="text-nrtf-muted/50 mb-1">Skipped (already exists): {result.skipped}</div>
-          {result.errors.length > 0 && (
-            <div className="mt-3">
-              <div className="text-red-400 text-xs mb-1">Errors:</div>
-              {result.errors.map(e => <div key={e} className="text-xs text-red-300">{e}</div>)}
-            </div>
-          )}
+      {pendingList.length > 0 && (
+        <div className="border border-[rgba(109,217,207,0.12)] rounded-lg overflow-hidden">
+          <table className="w-full text-sm font-sans">
+            <thead>
+              <tr className="border-b border-[rgba(109,217,207,0.12)]">
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Name</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">University</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Email</th>
+                <th className="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingList.map((a) => (
+                <tr key={a.id} className="border-b border-[rgba(109,217,207,0.06)] last:border-0">
+                  <td className="px-4 py-3 text-nrtf-text">{a.full_name}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/70">{a.university}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/50">{a.email}</td>
+                  <td className="px-4 py-3 text-right">
+                    <ConfirmButton id={a.id} email={a.email} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+      )}
+
+      {pendingList.length === 0 && (
+        <p className="text-xs text-nrtf-muted/50 font-sans text-center py-8">No pending attendees.</p>
       )}
     </main>
   );

@@ -33,13 +33,17 @@ export async function POST(req: NextRequest) {
     const message = err instanceof Error ? err.message : "Failed to read Google Sheet";
     return NextResponse.json({ error: message }, { status: 500 });
   }
+
   const serviceClient = createServiceClient();
 
-  // Pre-fetch all existing emails to avoid per-row queries
-  const { data: existingProfiles } = await serviceClient
-    .from("profiles")
-    .select("email");
-  const existingEmails = new Set((existingProfiles ?? []).map((p: { email: string }) => p.email.toLowerCase()));
+  // Pre-fetch all existing emails from both profiles and pending_attendees
+  const [{ data: existingProfiles }, { data: existingPending }] = await Promise.all([
+    serviceClient.from("profiles").select("email"),
+    serviceClient.from("pending_attendees").select("email"),
+  ]);
+
+  const confirmedEmails = new Set((existingProfiles ?? []).map((p: { email: string }) => p.email.toLowerCase()));
+  const pendingEmails = new Set((existingPending ?? []).map((p: { email: string }) => p.email.toLowerCase()));
 
   let imported = 0;
   let skipped = 0;
@@ -51,25 +55,18 @@ export async function POST(req: NextRequest) {
 
     const normalizedEmail = (email as string).trim().toLowerCase();
 
-    if (existingEmails.has(normalizedEmail)) { skipped++; continue; }
+    if (confirmedEmails.has(normalizedEmail) || pendingEmails.has(normalizedEmail)) {
+      skipped++;
+      continue;
+    }
 
-    // Create Supabase auth user and send invite
-    const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
-      normalizedEmail,
-      { redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/portal` }
-    );
-
-    if (inviteError) { errors.push(`${normalizedEmail}: ${inviteError.message}`); continue; }
-
-    // Create profile row
-    const { error: profileError } = await serviceClient.from("profiles").insert({
-      id: inviteData.user.id,
+    const { error: insertError } = await serviceClient.from("pending_attendees").insert({
       full_name: (full_name as string).trim(),
       email: normalizedEmail,
       university: (university as string)?.trim() ?? "",
     });
 
-    if (profileError) { errors.push(`${normalizedEmail}: ${profileError.message}`); continue; }
+    if (insertError) { errors.push(`${normalizedEmail}: ${insertError.message}`); continue; }
 
     imported++;
   }
