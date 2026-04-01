@@ -21,7 +21,7 @@ export default async function AdminRoomsPage() {
     .select("room_id, profiles(id, full_name, university)");
 
   const membersByRoom: Record<string, { id: string; full_name: string; university: string }[]> = {};
-  ((members ?? []) as MemberRow[]).forEach((m) => {
+  ((members ?? []) as unknown as MemberRow[]).forEach((m) => {
     if (!m.profiles) return;
     if (!membersByRoom[m.room_id]) membersByRoom[m.room_id] = [];
     membersByRoom[m.room_id].push(m.profiles);
