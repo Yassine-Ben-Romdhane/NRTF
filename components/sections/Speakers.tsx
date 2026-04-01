@@ -45,11 +45,11 @@ const members: Member[] = [
 
 const MemberCard: React.FC<{ member: Member }> = ({ member }) => (
   <div
-    className="group relative overflow-hidden rounded-2xl flex-shrink-0 w-[210px]"
+    className="group relative overflow-hidden rounded-2xl flex-shrink-0 w-[320px]"
     style={{ border: "1px solid rgba(109,217,207,0.10)", background: "rgba(109,217,207,0.03)" }}
   >
     {/* Photo */}
-    <div className="relative w-[210px] h-[210px] overflow-hidden bg-nrtf-bg/80">
+    <div className="relative w-[320px] h-[213px] overflow-hidden bg-nrtf-bg/80">
       {/* Initials placeholder */}
       <div
         className="absolute inset-0 flex items-center justify-center text-3xl font-display font-bold select-none"
@@ -63,8 +63,8 @@ const MemberCard: React.FC<{ member: Member }> = ({ member }) => (
         src={member.photo}
         alt={member.name}
         fill
-        className="object-cover object-top transition-all duration-500 grayscale group-hover:grayscale-0"
-        sizes="210px"
+        className="object-cover transition-all duration-500 grayscale group-hover:grayscale-0"
+        sizes="320px"
       />
 
       {/* Overlay */}
