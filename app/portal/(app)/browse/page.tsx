@@ -21,7 +21,7 @@ export default async function BrowsePage() {
     .select("profile_id, room_id, rooms(capacity)");
 
   type RoomMemberRow = { profile_id: string; room_id: string; rooms: { capacity: number } | null };
-  const members = (fullRoomMembers ?? []) as RoomMemberRow[];
+  const members = (fullRoomMembers ?? []) as unknown as RoomMemberRow[];
 
   const roomCounts: Record<string, number> = {};
   const roomCapacity: Record<string, number> = {};
