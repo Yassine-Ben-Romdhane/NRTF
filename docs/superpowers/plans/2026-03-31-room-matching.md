@@ -1033,7 +1033,7 @@ export default function AdminLoginPage() {
     if (error) { setError(error.message); setLoading(false); return; }
 
     // Check admin role
-    const role = data.user?.user_metadata?.role;
+    const role = data.user?.app_metadata?.role;
     if (role !== "admin") {
       await supabase.auth.signOut();
       setError("Access denied. Admin accounts only.");
@@ -1087,7 +1087,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) redirect("/admin/login");
-  if (user.user_metadata?.role !== "admin") redirect("/admin/login");
+  if (user.app_metadata?.role !== "admin") redirect("/admin/login");
 
   return <>{children}</>;
 }
@@ -1100,7 +1100,7 @@ Then in the SQL editor, set the role:
 
 ```sql
 update auth.users
-set raw_user_meta_data = raw_user_meta_data || '{"role": "admin"}'::jsonb
+set raw_app_meta_data = raw_app_meta_data || '{"role": "admin"}'::jsonb
 where email = 'your-admin@email.com';
 ```
 
@@ -1197,7 +1197,7 @@ function getSheets() {
 export async function POST(req: NextRequest) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.role !== "admin") {
+  if (!user || user.app_metadata?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -1344,7 +1344,7 @@ import { createClient } from "@/lib/supabase/server";
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.role !== "admin") {
+  if (!user || user.app_metadata?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

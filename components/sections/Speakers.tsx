@@ -26,14 +26,21 @@ interface Member {
 }
 
 const members: Member[] = [
-  { id: "1", name: "Member Name", role: "President",            photo: "https://i.pravatar.cc/300?img=11", linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "2", name: "Member Name", role: "Vice President",       photo: "https://i.pravatar.cc/300?img=12", linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "3", name: "Member Name", role: "Technical Lead",       photo: "https://i.pravatar.cc/300?img=13", linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "4", name: "Member Name", role: "Logistics Lead",       photo: "https://i.pravatar.cc/300?img=14", linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "5", name: "Member Name", role: "Sponsorship Lead",     photo: "https://i.pravatar.cc/300?img=15", linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "6", name: "Member Name", role: "Communications Lead",  photo: "https://i.pravatar.cc/300?img=16", linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "7", name: "Member Name", role: "Design Lead",          photo: "https://i.pravatar.cc/300?img=17", linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "8", name: "Member Name", role: "Program Coordinator",  photo: "https://i.pravatar.cc/300?img=18", linkedinUrl: "https://linkedin.com", color: "#137c55" },
+  { id: "1",  name: "Eya",         role: "Member", photo: "/oc-members/eya.png",         linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
+  { id: "2",  name: "Fairouza",    role: "Member", photo: "/oc-members/fairouza.png",    linkedinUrl: "https://linkedin.com", color: "#137c55" },
+  { id: "3",  name: "Hene",        role: "Member", photo: "/oc-members/hene.png",        linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
+  { id: "4",  name: "Ismail",      role: "Member", photo: "/oc-members/ismail.png",      linkedinUrl: "https://linkedin.com", color: "#137c55" },
+  { id: "5",  name: "Jihen",       role: "Member", photo: "/oc-members/jihen.png",       linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
+  { id: "6",  name: "Khalil",      role: "Member", photo: "/oc-members/khalil.png",      linkedinUrl: "https://linkedin.com", color: "#137c55" },
+  { id: "7",  name: "Kiki",        role: "Member", photo: "/oc-members/kiki.png",        linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
+  { id: "8",  name: "Malek",       role: "Member", photo: "/oc-members/malek.png",       linkedinUrl: "https://linkedin.com", color: "#137c55" },
+  { id: "9",  name: "Nour",        role: "Member", photo: "/oc-members/nour.PNG",        linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
+  { id: "10", name: "Ons",         role: "Member", photo: "/oc-members/Ons.png",         linkedinUrl: "https://linkedin.com", color: "#137c55" },
+  { id: "11", name: "Syratt",      role: "Member", photo: "/oc-members/syratt.png",      linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
+  { id: "12", name: "Talel",       role: "Member", photo: "/oc-members/talel.png",       linkedinUrl: "https://linkedin.com", color: "#137c55" },
+  { id: "13", name: "Yessin",      role: "Member", photo: "/oc-members/yessin.png",      linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
+  { id: "14", name: "Yessmin",     role: "Member", photo: "/oc-members/yessmin.png",     linkedinUrl: "https://linkedin.com", color: "#137c55" },
+  { id: "15", name: "Yessminena",  role: "Member", photo: "/oc-members/yessminena.PNG",  linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
 ];
 
 const MemberCard: React.FC<{ member: Member }> = ({ member }) => (
