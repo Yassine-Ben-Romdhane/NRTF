@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
     registration.email,
-    { redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/portal` }
+    { redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm?next=/portal` }
   );
 
   if (inviteError) {
