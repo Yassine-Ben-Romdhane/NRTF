@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import type { Registration, Profile } from "@/types/portal";
 import ImportButton from "./ImportButton";
 import ConfirmButton from "./ConfirmButton";
+import DeleteButton from "./DeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -99,7 +100,10 @@ export default async function AdminAttendeesPage() {
                     {new Date(r.registered_at).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <ConfirmButton id={r.id} email={r.email} status={r.status} />
+                    <div className="flex items-center gap-2 justify-end">
+                      <ConfirmButton id={r.id} email={r.email} status={r.status} />
+                      <DeleteButton endpoint={`/api/admin/registrations/${r.id}`} />
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -123,6 +127,7 @@ export default async function AdminAttendeesPage() {
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">University</th>
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Email</th>
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Joined</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -133,6 +138,9 @@ export default async function AdminAttendeesPage() {
                   <td className="px-4 py-3 text-nrtf-muted/50">{p.email}</td>
                   <td className="px-4 py-3 text-nrtf-muted/50 text-xs">
                     {new Date(p.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <DeleteButton endpoint={`/api/admin/profiles/${p.id}`} />
                   </td>
                 </tr>
               ))}
