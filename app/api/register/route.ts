@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
+import { createServiceClient } from "@/lib/supabase/server";
 
 function getSheets() {
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -16,12 +17,23 @@ function getSheets() {
   return google.sheets({ version: "v4", auth });
 }
 
-export async function POST(req: NextRequest) {
+async function appendToSheet(row: string[]): Promise<void> {
   const sheetId = process.env.GOOGLE_SHEET_ID;
-  if (!sheetId) {
-    return NextResponse.json({ error: "Server configuration error." }, { status: 500 });
+  if (!sheetId) return;
+  try {
+    const sheets = getSheets();
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: "A1",
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values: [row] },
+    });
+  } catch (err) {
+    console.error("Sheets backup failed (non-fatal):", err);
   }
+}
 
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { full_name, email, phone, university, field, year, interests, events, ieee_member, ieee_id } = body;
@@ -38,41 +50,56 @@ export async function POST(req: NextRequest) {
     if (!events?.length) return NextResponse.json({ error: "Select at least one event." }, { status: 400 });
     if (!ieee_member) return NextResponse.json({ error: "IEEE membership status is required." }, { status: 400 });
 
-    const sheets = getSheets();
     const normalizedEmail = email.trim().toLowerCase();
+    const serviceClient = createServiceClient();
 
-    // Check for duplicate email in column B
-    const existing = await sheets.spreadsheets.values.get({
-      spreadsheetId: sheetId,
-      range: "B:B",
-    });
+    // Duplicate check via Supabase
+    const { data: existing } = await serviceClient
+      .from("registrations")
+      .select("id")
+      .eq("email", normalizedEmail)
+      .single();
 
-    const emails = (existing.data.values ?? []).flat().map((e: string) => e.toLowerCase());
-    if (emails.includes(normalizedEmail)) {
+    if (existing) {
       return NextResponse.json({ error: "This email is already registered." }, { status: 409 });
     }
 
-    // Append registration row
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: sheetId,
-      range: "A1",
-      valueInputOption: "USER_ENTERED",
-      requestBody: {
-        values: [[
-          full_name.trim(),
-          normalizedEmail,
-          phone.trim(),
-          university.trim(),
-          field.trim(),
-          year,
-          JSON.stringify(interests),
-          JSON.stringify(events),
-          ieee_member,
-          ieee_id?.trim() || "",
-          new Date().toISOString(),
-        ]],
-      },
+    // Primary insert into Supabase
+    const { error: insertError } = await serviceClient.from("registrations").insert({
+      full_name: full_name.trim(),
+      email: normalizedEmail,
+      phone: phone.trim(),
+      university: university.trim(),
+      field: field.trim(),
+      year,
+      interests,
+      events,
+      ieee_member,
+      ieee_id: ieee_id?.trim() ?? "",
     });
+
+    if (insertError) {
+      // Race condition: two requests passed the duplicate check simultaneously
+      if (insertError.code === "23505") {
+        return NextResponse.json({ error: "This email is already registered." }, { status: 409 });
+      }
+      throw insertError;
+    }
+
+    // Fire-and-forget Sheets backup
+    void appendToSheet([
+      full_name.trim(),
+      normalizedEmail,
+      phone.trim(),
+      university.trim(),
+      field.trim(),
+      year,
+      JSON.stringify(interests),
+      JSON.stringify(events),
+      ieee_member,
+      ieee_id?.trim() ?? "",
+      new Date().toISOString(),
+    ]);
 
     return NextResponse.json(
       { success: true, message: "Registration successful! We'll be in touch soon." },

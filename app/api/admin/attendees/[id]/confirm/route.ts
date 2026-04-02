@@ -10,18 +10,22 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   const serviceClient = createServiceClient();
 
-  const { data: pending, error: fetchError } = await serviceClient
-    .from("pending_attendees")
+  const { data: registration, error: fetchError } = await serviceClient
+    .from("registrations")
     .select("*")
     .eq("id", params.id)
     .single();
 
-  if (fetchError || !pending) {
+  if (fetchError || !registration) {
     return NextResponse.json({ error: "Attendee not found" }, { status: 404 });
   }
 
+  if (registration.status === "invited") {
+    return NextResponse.json({ error: "Already invited" }, { status: 409 });
+  }
+
   const { data: inviteData, error: inviteError } = await serviceClient.auth.admin.inviteUserByEmail(
-    pending.email,
+    registration.email,
     { redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/portal` }
   );
 
@@ -31,16 +35,19 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
   const { error: profileError } = await serviceClient.from("profiles").insert({
     id: inviteData.user.id,
-    full_name: pending.full_name,
-    email: pending.email,
-    university: pending.university,
+    full_name: registration.full_name,
+    email: registration.email,
+    university: registration.university,
   });
 
   if (profileError) {
     return NextResponse.json({ error: profileError.message }, { status: 500 });
   }
 
-  await serviceClient.from("pending_attendees").delete().eq("id", params.id);
+  await serviceClient
+    .from("registrations")
+    .update({ status: "invited" })
+    .eq("id", params.id);
 
   return NextResponse.json({ ok: true });
 }

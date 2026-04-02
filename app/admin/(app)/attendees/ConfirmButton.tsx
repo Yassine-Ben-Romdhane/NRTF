@@ -3,10 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function ConfirmButton({ id, email }: { id: string; email: string }) {
+export default function ConfirmButton({ id, email, status }: { id: string; email: string; status: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+
+  if (status === "invited") {
+    return (
+      <span className="text-xs text-nrtf-muted/50 font-sans px-3 py-1.5">
+        Invited
+      </span>
+    );
+  }
 
   async function confirm() {
     setLoading(true);

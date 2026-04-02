@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createServiceClient } from "@/lib/supabase/server";
-import type { PendingAttendee } from "@/types/portal";
+import type { Registration } from "@/types/portal";
 import ImportButton from "./ImportButton";
 import ConfirmButton from "./ConfirmButton";
 
@@ -9,21 +9,29 @@ export const dynamic = "force-dynamic";
 export default async function AdminAttendeesPage() {
   const serviceClient = createServiceClient();
 
-  const [{ data: pending }, { count: confirmedCount }] = await Promise.all([
+  const [
+    { data: registrations },
+    { count: invitedCount },
+    { count: confirmedCount },
+  ] = await Promise.all([
     serviceClient
-      .from("pending_attendees")
+      .from("registrations")
       .select("*")
-      .order("imported_at", { ascending: true })
-      .returns<PendingAttendee[]>(),
+      .order("registered_at", { ascending: true })
+      .returns<Registration[]>(),
+    serviceClient
+      .from("registrations")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "invited"),
     serviceClient
       .from("profiles")
       .select("*", { count: "exact", head: true }),
   ]);
 
-  const pendingList = pending ?? [];
+  const registrationList: Registration[] = registrations ?? [];
 
   return (
-    <main className="min-h-screen px-8 py-12 max-w-3xl mx-auto">
+    <main className="min-h-screen px-8 py-12 max-w-5xl mx-auto">
       <div className="flex items-center gap-4 mb-8">
         <Link href="/admin" className="text-xs text-nrtf-muted/50 hover:text-nrtf-muted font-sans">← Back</Link>
         <h1 className="font-display font-bold text-2xl text-nrtf-text">Attendees</h1>
@@ -31,24 +39,28 @@ export default async function AdminAttendeesPage() {
 
       <div className="flex gap-4 mb-6">
         <div className="border border-[rgba(109,217,207,0.12)] rounded-lg px-5 py-4 flex-1 font-sans">
-          <div className="text-2xl font-bold text-nrtf-text">{pendingList.length}</div>
-          <div className="text-xs text-nrtf-muted/50 mt-1">Pending (awaiting payment)</div>
+          <div className="text-2xl font-bold text-nrtf-text">{registrationList.length}</div>
+          <div className="text-xs text-nrtf-muted/50 mt-1">Registered (total)</div>
+        </div>
+        <div className="border border-[rgba(109,217,207,0.12)] rounded-lg px-5 py-4 flex-1 font-sans">
+          <div className="text-2xl font-bold text-nrtf-text">{invitedCount ?? 0}</div>
+          <div className="text-xs text-nrtf-muted/50 mt-1">Invited</div>
         </div>
         <div className="border border-[rgba(109,217,207,0.12)] rounded-lg px-5 py-4 flex-1 font-sans">
           <div className="text-2xl font-bold text-nrtf-text">{confirmedCount ?? 0}</div>
-          <div className="text-xs text-nrtf-muted/50 mt-1">Confirmed (invited)</div>
+          <div className="text-xs text-nrtf-muted/50 mt-1">Confirmed</div>
         </div>
       </div>
 
       <div className="border border-[rgba(109,217,207,0.12)] rounded-lg p-6 mb-6">
         <h2 className="font-sans font-medium text-nrtf-text text-sm mb-2">Import from Google Sheet</h2>
         <p className="text-xs text-nrtf-muted/50 font-sans mb-4">
-          Pulls registrations into the pending list. Confirm each attendee individually after they pay.
+          Pulls existing registrations into the pending list. New registrations are saved automatically.
         </p>
         <ImportButton />
       </div>
 
-      {pendingList.length > 0 && (
+      {registrationList.length > 0 && (
         <div className="border border-[rgba(109,217,207,0.12)] rounded-lg overflow-hidden">
           <table className="w-full text-sm font-sans">
             <thead>
@@ -56,17 +68,35 @@ export default async function AdminAttendeesPage() {
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Name</th>
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">University</th>
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Email</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Field</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">IEEE</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Status</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Date</th>
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
-              {pendingList.map((a) => (
-                <tr key={a.id} className="border-b border-[rgba(109,217,207,0.06)] last:border-0">
-                  <td className="px-4 py-3 text-nrtf-text">{a.full_name}</td>
-                  <td className="px-4 py-3 text-nrtf-muted/70">{a.university}</td>
-                  <td className="px-4 py-3 text-nrtf-muted/50">{a.email}</td>
+              {registrationList.map((r) => (
+                <tr key={r.id} className="border-b border-[rgba(109,217,207,0.06)] last:border-0">
+                  <td className="px-4 py-3 text-nrtf-text">{r.full_name}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/70">{r.university}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/50">{r.email}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/70">{r.field}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/50">{r.ieee_member}</td>
+                  <td className="px-4 py-3">
+                    <span className={
+                      r.status === "invited"
+                        ? "text-xs px-2 py-0.5 rounded font-sans font-medium bg-[rgba(19,124,85,0.2)] text-[#6dd9cf]"
+                        : "text-xs px-2 py-0.5 rounded font-sans font-medium bg-[rgba(109,217,207,0.08)] text-nrtf-muted/70"
+                    }>
+                      {r.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-nrtf-muted/50 text-xs">
+                    {new Date(r.registered_at).toLocaleDateString()}
+                  </td>
                   <td className="px-4 py-3 text-right">
-                    <ConfirmButton id={a.id} email={a.email} />
+                    <ConfirmButton id={r.id} email={r.email} status={r.status} />
                   </td>
                 </tr>
               ))}
@@ -75,8 +105,8 @@ export default async function AdminAttendeesPage() {
         </div>
       )}
 
-      {pendingList.length === 0 && (
-        <p className="text-xs text-nrtf-muted/50 font-sans text-center py-8">No pending attendees.</p>
+      {registrationList.length === 0 && (
+        <p className="text-xs text-nrtf-muted/50 font-sans text-center py-8">No registrations yet.</p>
       )}
     </main>
   );
