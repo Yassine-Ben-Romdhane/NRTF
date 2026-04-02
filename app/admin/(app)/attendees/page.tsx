@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createServiceClient } from "@/lib/supabase/server";
-import type { Registration } from "@/types/portal";
+import type { Registration, Profile } from "@/types/portal";
 import ImportButton from "./ImportButton";
 import ConfirmButton from "./ConfirmButton";
 
@@ -12,7 +12,7 @@ export default async function AdminAttendeesPage() {
   const [
     { data: registrations },
     { count: invitedCount },
-    { count: confirmedCount },
+    { data: confirmed },
   ] = await Promise.all([
     serviceClient
       .from("registrations")
@@ -25,10 +25,13 @@ export default async function AdminAttendeesPage() {
       .eq("status", "invited"),
     serviceClient
       .from("profiles")
-      .select("*", { count: "exact", head: true }),
+      .select("*")
+      .order("created_at", { ascending: true })
+      .returns<Profile[]>(),
   ]);
 
   const registrationList: Registration[] = registrations ?? [];
+  const confirmedList: Profile[] = confirmed ?? [];
 
   return (
     <main className="min-h-screen px-8 py-12 max-w-5xl mx-auto">
@@ -47,7 +50,7 @@ export default async function AdminAttendeesPage() {
           <div className="text-xs text-nrtf-muted/50 mt-1">Invited</div>
         </div>
         <div className="border border-[rgba(109,217,207,0.12)] rounded-lg px-5 py-4 flex-1 font-sans">
-          <div className="text-2xl font-bold text-nrtf-text">{confirmedCount ?? 0}</div>
+          <div className="text-2xl font-bold text-nrtf-text">{confirmedList.length}</div>
           <div className="text-xs text-nrtf-muted/50 mt-1">Confirmed</div>
         </div>
       </div>
@@ -107,6 +110,39 @@ export default async function AdminAttendeesPage() {
 
       {registrationList.length === 0 && (
         <p className="text-xs text-nrtf-muted/50 font-sans text-center py-8">No registrations yet.</p>
+      )}
+
+      <h2 className="font-display font-bold text-lg text-nrtf-text mt-10 mb-4">Confirmed Attendees</h2>
+
+      {confirmedList.length > 0 && (
+        <div className="border border-[rgba(109,217,207,0.12)] rounded-lg overflow-hidden">
+          <table className="w-full text-sm font-sans">
+            <thead>
+              <tr className="border-b border-[rgba(109,217,207,0.12)]">
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Name</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">University</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Email</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              {confirmedList.map((p) => (
+                <tr key={p.id} className="border-b border-[rgba(109,217,207,0.06)] last:border-0">
+                  <td className="px-4 py-3 text-nrtf-text">{p.full_name}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/70">{p.university}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/50">{p.email}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/50 text-xs">
+                    {new Date(p.created_at).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {confirmedList.length === 0 && (
+        <p className="text-xs text-nrtf-muted/50 font-sans text-center py-8">No confirmed attendees yet.</p>
       )}
     </main>
   );
