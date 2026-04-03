@@ -28,7 +28,7 @@ export default function Hero() {
     <section
       id="hero"
       ref={sectionRef}
-      className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden pb-16 md:pb-24"
+      className="relative w-full min-h-screen flex flex-col justify-end overflow-hidden pt-20 pb-16 md:pb-24"
     >
       {/* ── Background ── */}
       <div
@@ -39,7 +39,7 @@ export default function Hero() {
         }}
       />
       <motion.div className="absolute inset-0 z-[1]" style={{ opacity: bgOpacity }}>
-        <NeuralBackground color="#6dd9cf" trailOpacity={0.05} particleCount={400} speed={0.4} />
+        <NeuralBackground color="#6dd9cf" trailOpacity={0.05} particleCount={120} speed={0.4} />
       </motion.div>
 
       {/* Top vignette — darkens top edge so navbar stays readable */}

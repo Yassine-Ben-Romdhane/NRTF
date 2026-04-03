@@ -98,7 +98,7 @@ export default function Register() {
       <div className="w-full px-8 md:px-16 lg:px-24">
 
         {status === "success" ? (
-          <div className="reveal flex flex-col items-center gap-4 py-16 text-center">
+          <div className="flex flex-col items-center gap-4 py-16 text-center">
             <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ background: "#137c5520", border: "1px solid #137c55" }}>
               <Check size={32} style={{ color: "#137c55" }} />
             </div>
@@ -144,8 +144,8 @@ export default function Register() {
                   <Field label="Field of Study *" error={errors.field}><input className={inputCls} placeholder="e.g. Electrical Engineering" value={form.field} onChange={(e) => set("field", e.target.value)} /></Field>
                   <Field label="Year of Study *" error={errors.year}>
                     <select className={inputCls} value={form.year} onChange={(e) => set("year", e.target.value)}>
-                      <option value="" disabled>Select year</option>
-                      {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
+                      <option value="" disabled style={{ color: '#111', background: '#fff' }}>Select year</option>
+                      {YEARS.map((y) => <option key={y} value={y} style={{ color: '#111', background: '#fff' }}>{y}</option>)}
                     </select>
                   </Field>
                 </div>
