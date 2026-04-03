@@ -35,15 +35,12 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: createError.message }, { status: 500 });
   }
 
-  // Derive site URL from the request so it works in any environment
-  const siteUrl = process.env.SITE_URL ?? `${req.nextUrl.protocol}//${req.nextUrl.host}`;
-
   // Generate the invite magic link
   const { data: linkData, error: linkError } = await serviceClient.auth.admin.generateLink({
     type: "invite",
     email: registration.email,
     options: {
-      redirectTo: `${siteUrl}/auth/confirm?next=/portal`,
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm?next=/portal`,
     },
   });
 
