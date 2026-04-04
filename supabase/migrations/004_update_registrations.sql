@@ -12,3 +12,9 @@ alter table public.registrations
   add column if not exists team_name text not null default '',
   add column if not exists team_leader text not null default '',
   add column if not exists team_members text not null default '';
+
+-- Give old unused columns defaults so they don't break the new insert
+alter table public.registrations
+  alter column university set default '',
+  alter column field set default '',
+  alter column ieee_member set default '';
