@@ -4,28 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { Check, Loader2, Calendar, MapPin, Ticket } from "lucide-react";
 
 const YEARS = ["1st Year", "2nd Year", "3rd Year", "4th Year", "5th Year", "Graduate / Master", "PhD"];
-const INTERESTS = ["Renewable Energy", "Electronics", "Artificial Intelligence"];
-const EVENTS = ["Opening Ceremony", "Hackathon", "Certified Workshops", "Project Exhibition", "Art Exhibition", "Pitching", "Awards Ceremony"];
 
 type Status = "idle" | "loading" | "success" | "error";
-
-function MultiSelect({ options, selected, onChange, color }: { options: string[]; selected: string[]; onChange: (val: string[]) => void; color: string }) {
-  const toggle = (opt: string) => onChange(selected.includes(opt) ? selected.filter((s) => s !== opt) : [...selected, opt]);
-  return (
-    <div className="flex flex-wrap gap-2">
-      {options.map((opt) => {
-        const active = selected.includes(opt);
-        return (
-          <button key={opt} type="button" onClick={() => toggle(opt)}
-            className="px-3 py-1.5 rounded-full text-sm font-medium border transition-all duration-200"
-            style={{ background: active ? `${color}20` : "transparent", borderColor: active ? color : "rgba(109,217,207,0.15)", color: active ? color : "rgba(109,217,207,0.5)" }}>
-            {active && <Check size={12} className="inline mr-1" />}{opt}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
@@ -45,9 +25,32 @@ const INFO_CARDS = [
   { Icon: Ticket, title: "Free Entry", sub: "Open to all students and professionals" },
 ];
 
+const ACCOMMODATION = [
+  { value: "single", label: "Single", price: "300 DT" },
+  { value: "double", label: "Double", price: "250 DT" },
+  { value: "triple", label: "Triple", price: "200 DT" },
+];
+
 export default function Register() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [form, setForm] = useState({ full_name: "", email: "", phone: "", university: "", field: "", year: "", interests: [] as string[], events: [] as string[], ieee_member: "", ieee_id: "" });
+  const [form, setForm] = useState({
+    full_name: "",
+    fac_or_org: "",
+    participant_type: "",  // "student" | "professional"
+    year: "",
+    email: "",
+    phone: "",
+    cin: "",
+    birthday: "",
+    accommodation: "",
+    facebook_link: "",
+    bus: "",
+    bus_city: "",
+    hackathon: "",
+    team_name: "",
+    team_leader: "",
+    team_members: "",
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
@@ -61,19 +64,31 @@ export default function Register() {
     return () => obs.disconnect();
   }, []);
 
-  const set = (key: string, value: unknown) => { setForm((prev) => ({ ...prev, [key]: value })); setErrors((prev) => ({ ...prev, [key]: "" })); };
+  const set = (key: string, value: string) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    setErrors((prev) => ({ ...prev, [key]: "" }));
+  };
 
   const validate = () => {
     const e: Record<string, string> = {};
     if (!form.full_name.trim()) e.full_name = "Required";
     if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Valid email required";
     if (!form.phone.trim()) e.phone = "Required";
-    if (!form.university.trim()) e.university = "Required";
-    if (!form.field.trim()) e.field = "Required";
-    if (!form.year) e.year = "Required";
-    if (!form.interests.length) e.interests = "Select at least one";
-    if (!form.events.length) e.events = "Select at least one";
-    if (!form.ieee_member) e.ieee_member = "Required";
+    if (!form.cin.trim()) e.cin = "Required";
+    if (!form.birthday) e.birthday = "Required";
+    if (!form.fac_or_org.trim()) e.fac_or_org = "Required";
+    if (!form.participant_type) e.participant_type = "Required";
+    if (form.participant_type === "student" && !form.year) e.year = "Required";
+    if (!form.accommodation) e.accommodation = "Required";
+    if (!form.facebook_link.trim()) e.facebook_link = "Required";
+    if (!form.bus) e.bus = "Required";
+    if (form.bus === "yes" && !form.bus_city) e.bus_city = "Required";
+    if (!form.hackathon) e.hackathon = "Required";
+    if (form.hackathon === "yes") {
+      if (!form.team_name.trim()) e.team_name = "Required";
+      if (!form.team_leader.trim()) e.team_leader = "Required";
+      if (!form.team_members.trim()) e.team_members = "Required";
+    }
     return e;
   };
 
@@ -136,35 +151,131 @@ export default function Register() {
             {/* Right col — form */}
             <div className="lg:w-[65%]">
               <form onSubmit={handleSubmit} className="reveal space-y-6">
+
+                {/* Personal info */}
                 <div className="grid sm:grid-cols-2 gap-5">
-                  <Field label="Full Name *" error={errors.full_name}><input className={inputCls} placeholder="e.g. Foulen Ben Falten" value={form.full_name} onChange={(e) => set("full_name", e.target.value)} /></Field>
-                  <Field label="Email *" error={errors.email}><input className={inputCls} type="email" placeholder="you@email.com" value={form.email} onChange={(e) => set("email", e.target.value)} /></Field>
-                  <Field label="Phone Number *" error={errors.phone}><input className={inputCls} type="tel" placeholder="+216 XX XXX XXX" value={form.phone} onChange={(e) => set("phone", e.target.value)} /></Field>
-                  <Field label="University / Institution *" error={errors.university}><input className={inputCls} placeholder="e.g. INSAT" value={form.university} onChange={(e) => set("university", e.target.value)} /></Field>
-                  <Field label="Field of Study *" error={errors.field}><input className={inputCls} placeholder="e.g. Electrical Engineering" value={form.field} onChange={(e) => set("field", e.target.value)} /></Field>
-                  <Field label="Year of Study *" error={errors.year}>
-                    <select className={inputCls} value={form.year} onChange={(e) => set("year", e.target.value)}>
-                      <option value="" disabled style={{ color: '#111', background: '#fff' }}>Select year</option>
-                      {YEARS.map((y) => <option key={y} value={y} style={{ color: '#111', background: '#fff' }}>{y}</option>)}
-                    </select>
+                  <Field label="Full Name *" error={errors.full_name}>
+                    <input className={inputCls} placeholder="e.g. Foulen Ben Falten" value={form.full_name} onChange={(e) => set("full_name", e.target.value)} />
+                  </Field>
+                  <Field label="Email *" error={errors.email}>
+                    <input className={inputCls} type="email" placeholder="you@email.com" value={form.email} onChange={(e) => set("email", e.target.value)} />
+                  </Field>
+                  <Field label="Phone Number *" error={errors.phone}>
+                    <input className={inputCls} type="tel" placeholder="+216 XX XXX XXX" value={form.phone} onChange={(e) => set("phone", e.target.value)} />
+                  </Field>
+                  <Field label="CIN Number *" error={errors.cin}>
+                    <input className={inputCls} placeholder="e.g. 12345678" value={form.cin} onChange={(e) => set("cin", e.target.value)} />
+                  </Field>
+                  <Field label="Birthday *" error={errors.birthday}>
+                    <input className={inputCls} type="date" value={form.birthday} onChange={(e) => set("birthday", e.target.value)} />
                   </Field>
                 </div>
-                <Field label="Areas of Interest *" error={errors.interests}><MultiSelect options={INTERESTS} selected={form.interests} onChange={(v) => set("interests", v)} color="#6dd9cf" /></Field>
-                <Field label="Events to Attend *" error={errors.events}><MultiSelect options={EVENTS} selected={form.events} onChange={(v) => set("events", v)} color="#137c55" /></Field>
-                <Field label="IEEE Member? *" error={errors.ieee_member}>
+
+                {/* Faculty / Organization */}
+                <div className="grid sm:grid-cols-2 gap-5">
+                  <Field label="Participant Type *" error={errors.participant_type}>
+                    <div className="flex gap-4 pt-1">
+                      {[{ value: "student", label: "Student (Faculty)" }, { value: "professional", label: "Organization" }].map((opt) => (
+                        <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                          <input type="radio" name="participant_type" value={opt.value} checked={form.participant_type === opt.value} onChange={() => set("participant_type", opt.value)} className="accent-nrtf-primary" />
+                          <span className="text-sm text-nrtf-muted/80">{opt.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </Field>
+                  <Field label="Faculty / Organization Name *" error={errors.fac_or_org}>
+                    <input className={inputCls} placeholder="e.g. INSAT or IEEE" value={form.fac_or_org} onChange={(e) => set("fac_or_org", e.target.value)} />
+                  </Field>
+                </div>
+
+                {form.participant_type === "student" && (
+                  <Field label="Year of Study *" error={errors.year}>
+                    <select className={inputCls} value={form.year} onChange={(e) => set("year", e.target.value)}>
+                      <option value="" disabled style={{ color: "#111", background: "#fff" }}>Select year</option>
+                      {YEARS.map((y) => <option key={y} value={y} style={{ color: "#111", background: "#fff" }}>{y}</option>)}
+                    </select>
+                  </Field>
+                )}
+
+                {/* Accommodation */}
+                <Field label="Accommodation *" error={errors.accommodation}>
+                  <div className="flex flex-wrap gap-3">
+                    {ACCOMMODATION.map((opt) => {
+                      const active = form.accommodation === opt.value;
+                      return (
+                        <button key={opt.value} type="button" onClick={() => set("accommodation", opt.value)}
+                          className="flex flex-col items-start px-4 py-3 rounded-xl border transition-all duration-200 min-w-[100px]"
+                          style={{ background: active ? "rgba(19,124,85,0.12)" : "rgba(255,255,255,0.03)", borderColor: active ? "#137c55" : "rgba(109,217,207,0.15)" }}>
+                          <span className="text-sm font-semibold" style={{ color: active ? "#6dd9cf" : "rgba(109,217,207,0.6)" }}>{opt.label}</span>
+                          <span className="text-xs mt-0.5" style={{ color: active ? "rgba(109,217,207,0.8)" : "rgba(109,217,207,0.35)" }}>{opt.price} / person</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </Field>
+
+                {/* Facebook */}
+                <Field label="Facebook Profile Link *" error={errors.facebook_link}>
+                  <input className={inputCls} type="url" placeholder="https://facebook.com/yourprofile" value={form.facebook_link} onChange={(e) => set("facebook_link", e.target.value)} />
+                </Field>
+
+                {/* Bus */}
+                <Field label="Bus Transportation *" error={errors.bus}>
                   <div className="flex gap-4">
-                    {["Yes", "No"].map((opt) => (
-                      <label key={opt} className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="ieee_member" value={opt} checked={form.ieee_member === opt} onChange={() => set("ieee_member", opt)} className="accent-nrtf-primary" />
-                        <span className="text-sm text-nrtf-muted/80">{opt}</span>
+                    {[{ value: "yes", label: "Yes" }, { value: "no", label: "No" }].map((opt) => (
+                      <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="bus" value={opt.value} checked={form.bus === opt.value} onChange={() => set("bus", opt.value)} className="accent-nrtf-primary" />
+                        <span className="text-sm text-nrtf-muted/80">{opt.label}</span>
                       </label>
                     ))}
                   </div>
                 </Field>
-                {form.ieee_member === "Yes" && (
-                  <Field label="IEEE Member ID"><input className={inputCls} placeholder="Your IEEE Member ID" value={form.ieee_id} onChange={(e) => set("ieee_id", e.target.value)} /></Field>
+
+                {form.bus === "yes" && (
+                  <Field label="Bus Departure City *" error={errors.bus_city}>
+                    <div className="flex gap-4">
+                      {["Sfax", "Tunis"].map((city) => (
+                        <label key={city} className="flex items-center gap-2 cursor-pointer">
+                          <input type="radio" name="bus_city" value={city.toLowerCase()} checked={form.bus_city === city.toLowerCase()} onChange={() => set("bus_city", city.toLowerCase())} className="accent-nrtf-primary" />
+                          <span className="text-sm text-nrtf-muted/80">{city}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </Field>
                 )}
-                {status === "error" && <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3">{message}</p>}
+
+                {/* Hackathon */}
+                <Field label="Will you participate in the Hackathon? *" error={errors.hackathon}>
+                  <div className="flex gap-4">
+                    {[{ value: "yes", label: "Yes" }, { value: "no", label: "No" }].map((opt) => (
+                      <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="hackathon" value={opt.value} checked={form.hackathon === opt.value} onChange={() => set("hackathon", opt.value)} className="accent-nrtf-primary" />
+                        <span className="text-sm text-nrtf-muted/80">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </Field>
+
+                {form.hackathon === "yes" && (
+                  <div className="grid sm:grid-cols-2 gap-5 pl-2 border-l-2 border-[rgba(109,217,207,0.2)]">
+                    <Field label="Team Name *" error={errors.team_name}>
+                      <input className={inputCls} placeholder="Your team name" value={form.team_name} onChange={(e) => set("team_name", e.target.value)} />
+                    </Field>
+                    <Field label="Team Leader Name *" error={errors.team_leader}>
+                      <input className={inputCls} placeholder="Leader's full name" value={form.team_leader} onChange={(e) => set("team_leader", e.target.value)} />
+                    </Field>
+                    <div className="sm:col-span-2">
+                      <Field label="Team Members *" error={errors.team_members}>
+                        <textarea className={`${inputCls} resize-none`} rows={3} placeholder="List all team members, one per line" value={form.team_members} onChange={(e) => set("team_members", e.target.value)} />
+                      </Field>
+                    </div>
+                  </div>
+                )}
+
+                {status === "error" && (
+                  <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-3">{message}</p>
+                )}
+
                 <button type="submit" disabled={status === "loading"}
                   className="w-full sm:w-auto flex items-center justify-center gap-2 px-10 py-3.5 rounded-full font-semibold text-sm text-white bg-gradient-to-r from-nrtf-primary to-nrtf-secondary hover:opacity-90 transition-opacity disabled:opacity-60">
                   {status === "loading" ? <><Loader2 size={16} className="animate-spin" /> Submitting…</> : "Submit Registration"}

@@ -70,10 +70,11 @@ export default async function AdminAttendeesPage() {
             <thead>
               <tr className="border-b border-[rgba(109,217,207,0.12)]">
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Name</th>
-                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">University</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Fac / Org</th>
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Email</th>
-                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Field</th>
-                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">IEEE</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Room</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Bus</th>
+                <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Hackathon</th>
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Status</th>
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Date</th>
                 <th className="px-4 py-3"></th>
@@ -83,10 +84,11 @@ export default async function AdminAttendeesPage() {
               {registrationList.map((r) => (
                 <tr key={r.id} className="border-b border-[rgba(109,217,207,0.06)] last:border-0">
                   <td className="px-4 py-3 text-nrtf-text">{r.full_name}</td>
-                  <td className="px-4 py-3 text-nrtf-muted/70">{r.university}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/70">{r.fac_or_org}</td>
                   <td className="px-4 py-3 text-nrtf-muted/50">{r.email}</td>
-                  <td className="px-4 py-3 text-nrtf-muted/70">{r.field}</td>
-                  <td className="px-4 py-3 text-nrtf-muted/50">{r.ieee_member}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/70 capitalize">{r.accommodation}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/50 capitalize">{r.bus === "yes" ? `Yes (${r.bus_city})` : "No"}</td>
+                  <td className="px-4 py-3 text-nrtf-muted/50 capitalize">{r.hackathon === "yes" ? r.team_name || "Yes" : "No"}</td>
                   <td className="px-4 py-3">
                     <span className={
                       r.status === "invited"
