@@ -24,7 +24,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
   if (action === "decline") {
     const { error } = await supabase.from("room_requests").update({ status: "declined" }).eq("id", params.id);
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) {
+      console.error("Room request decline error:", error);
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
     return NextResponse.json({ success: true });
   }
 
@@ -54,7 +57,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 
     const { error: insertError } = await supabase.from("room_members").insert({ room_id: roomId, profile_id: user.id });
-    if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 });
+    if (insertError) {
+      console.error("Room member insert error:", insertError);
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
   } else {
     const { data: newRoom } = await supabase
       .from("rooms")
@@ -67,12 +73,18 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       { room_id: roomId, profile_id: request.from_id },
       { room_id: roomId, profile_id: user.id },
     ]);
-    if (insertError) return NextResponse.json({ error: insertError.message }, { status: 500 });
+    if (insertError) {
+      console.error("Room members insert error:", insertError);
+      return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    }
   }
 
   // Mark as accepted only after room is successfully created
   const { error: updateError } = await supabase.from("room_requests").update({ status: "accepted" }).eq("id", params.id);
-  if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
+  if (updateError) {
+    console.error("Room request accept error:", updateError);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true, room_id: roomId });
 }

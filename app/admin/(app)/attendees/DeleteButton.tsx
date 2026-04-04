@@ -10,6 +10,10 @@ export default function DeleteButton({ endpoint }: { endpoint: string }) {
   const router = useRouter();
 
   async function handleDelete() {
+    if (!endpoint.startsWith("/api/admin/")) {
+      setError("Invalid endpoint");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {

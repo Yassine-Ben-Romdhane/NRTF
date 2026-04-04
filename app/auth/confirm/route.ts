@@ -6,7 +6,8 @@ export async function GET(req: NextRequest) {
   const code = searchParams.get("code");
   const token_hash = searchParams.get("token_hash");
   const type = searchParams.get("type");
-  const next = searchParams.get("next") ?? "/portal";
+  const rawNext = searchParams.get("next") ?? "/portal";
+  const next = rawNext.startsWith("/") ? rawNext : "/portal";
 
   const supabase = createClient();
 
