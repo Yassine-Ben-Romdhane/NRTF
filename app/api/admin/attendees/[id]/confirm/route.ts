@@ -25,17 +25,8 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: "Already invited" }, { status: 409 });
   }
 
-  // Create the auth user (no email sent by Supabase)
-  const { data: createdUser, error: createError } = await serviceClient.auth.admin.createUser({
-    email: registration.email,
-    email_confirm: false,
-  });
-
-  if (createError) {
-    return NextResponse.json({ error: createError.message }, { status: 500 });
-  }
-
-  // Generate the invite magic link
+  // generateLink with type "invite" creates the auth user if they don't exist,
+  // or reuses them if they do — avoiding the "already registered" error from createUser.
   const { data: linkData, error: linkError } = await serviceClient.auth.admin.generateLink({
     type: "invite",
     email: registration.email,
@@ -48,13 +39,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: linkError?.message ?? "Failed to generate invite link" }, { status: 500 });
   }
 
-  // Insert profile
-  const { error: profileError } = await serviceClient.from("profiles").insert({
-    id: createdUser.user.id,
+  // Upsert profile so re-inviting a user doesn't crash on duplicate key
+  const { error: profileError } = await serviceClient.from("profiles").upsert({
+    id: linkData.user.id,
     full_name: registration.full_name,
     email: registration.email,
-    university: registration.university,
-  });
+    university: registration.fac_or_org,
+  }, { onConflict: "id" });
 
   if (profileError) {
     return NextResponse.json({ error: profileError.message }, { status: 500 });

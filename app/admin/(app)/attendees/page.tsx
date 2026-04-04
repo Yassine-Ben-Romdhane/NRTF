@@ -35,7 +35,7 @@ export default async function AdminAttendeesPage() {
   const confirmedList: Profile[] = confirmed ?? [];
 
   return (
-    <main className="min-h-screen px-8 py-12 max-w-5xl mx-auto">
+    <main className="min-h-screen px-8 py-12 max-w-7xl mx-auto">
       <div className="flex items-center gap-4 mb-8">
         <Link href="/admin" className="text-xs text-nrtf-muted/50 hover:text-nrtf-muted font-sans">← Back</Link>
         <h1 className="font-display font-bold text-2xl text-nrtf-text">Attendees</h1>
@@ -65,8 +65,8 @@ export default async function AdminAttendeesPage() {
       </div>
 
       {registrationList.length > 0 && (
-        <div className="border border-[rgba(109,217,207,0.12)] rounded-lg overflow-hidden">
-          <table className="w-full text-sm font-sans">
+        <div className="border border-[rgba(109,217,207,0.12)] rounded-lg overflow-x-auto">
+          <table className="w-full text-sm font-sans min-w-[900px]">
             <thead>
               <tr className="border-b border-[rgba(109,217,207,0.12)]">
                 <th className="text-left px-4 py-3 text-xs text-nrtf-muted/50 font-medium">Name</th>
