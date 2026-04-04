@@ -16,5 +16,9 @@ alter table public.registrations
 -- Give old unused columns defaults so they don't break the new insert
 alter table public.registrations
   alter column university set default '',
-  alter column field set default '',
-  alter column ieee_member set default '';
+  alter column field set default '';
+
+-- Drop old IEEE columns
+alter table public.registrations
+  drop column if exists ieee_member,
+  drop column if exists ieee_id;
