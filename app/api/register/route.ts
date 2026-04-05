@@ -232,6 +232,8 @@ export async function POST(req: NextRequest) {
       participant_type,
       participant_type === "student" ? (year?.trim() ?? "") : "",
       accommodation,
+      roommate1?.trim() ?? "",
+      accommodation === "triple" ? (roommate2?.trim() ?? "") : "",
       facebook_link.trim(),
       bus,
       bus === "yes" ? bus_city : "",
