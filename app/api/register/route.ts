@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
         };
 
         await transporter.sendMail({
-          from: process.env.SMTP_FROM ?? process.env.SMTP_USER,
+          from: "NRTF 3.0 <national.re.tech.fusion.ieee.insat@gmail.com>",
           to: normalizedEmail,
           subject: "NRTF 3.0 – Payment Confirmation & Registration Details",
           html: `
