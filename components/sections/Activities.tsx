@@ -224,39 +224,29 @@ export default function Activities() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [paddingX, setPaddingX] = useState(32);
 
-  // Compute padding so that card 0 is centered at scrollLeft=0
-  const computePadding = useCallback(() => {
+  // Directly set padding on the DOM element so it's applied before scroll reset
+  const applyPadding = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     const p = Math.max(32, Math.floor(el.clientWidth / 2 - CARD_WIDTH / 2));
-    setPaddingX(p);
+    el.style.paddingLeft = `${p}px`;
+    el.style.paddingRight = `${p}px`;
+    el.scrollLeft = 0;
   }, []);
 
-  // Center card 0 on mount once padding is known
   useEffect(() => {
-    computePadding();
-    const el = scrollRef.current;
-    if (el) el.scrollLeft = 0;
-  }, [computePadding]);
-
-  // Recompute on resize
-  useEffect(() => {
-    window.addEventListener("resize", computePadding);
-    return () => window.removeEventListener("resize", computePadding);
-  }, [computePadding]);
+    applyPadding();
+    window.addEventListener("resize", applyPadding);
+    return () => window.removeEventListener("resize", applyPadding);
+  }, [applyPadding]);
 
   const updateScrollState = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
-
     setCanScrollLeft(el.scrollLeft > 5);
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 5);
-
-    // Which card center is closest to viewport center
-    const cardStep = CARD_WIDTH + CARD_GAP;
-    const idx = Math.round(el.scrollLeft / cardStep);
+    const idx = Math.round(el.scrollLeft / (CARD_WIDTH + CARD_GAP));
     setActiveIdx(Math.max(0, Math.min(idx, activities.length - 1)));
   }, []);
 
@@ -274,7 +264,7 @@ export default function Activities() {
     el.scrollBy({ left: dir * (CARD_WIDTH + CARD_GAP), behavior: "smooth" });
   };
 
-  // scrollLeft = idx * step centers card[idx] given the symmetric padding
+  // With symmetric padding, scrollLeft = idx * step perfectly centers card[idx]
   const scrollToCard = (idx: number) => {
     const el = scrollRef.current;
     if (!el) return;
@@ -368,8 +358,8 @@ export default function Activities() {
               WebkitOverflowScrolling: "touch",
               scrollbarWidth: "none",
               msOverflowStyle: "none",
-              paddingLeft: paddingX,
-              paddingRight: paddingX,
+              paddingLeft: 32,
+              paddingRight: 32,
             }}
           >
             {activities.map((activity, i) => (
