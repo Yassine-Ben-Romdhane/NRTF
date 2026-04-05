@@ -43,6 +43,8 @@ export default function Register() {
     cin: "",
     birthday: "",
     accommodation: "",
+    roommate1: "",
+    roommate2: "",
     facebook_link: "",
     bus: "",
     bus_city: "",
@@ -120,8 +122,7 @@ export default function Register() {
             <h3 className="font-display font-bold text-2xl text-nrtf-text">You&apos;re registered!</h3>
             <p className="text-nrtf-muted/70 max-w-sm">{message}</p>
             <p className="text-nrtf-muted/50 text-xs max-w-sm mt-2 font-sans">
-              Once you receive your invite email, you can find a roommate at{" "}
-              <a href="/portal" className="underline hover:text-nrtf-light transition-colors">/portal</a>.
+              Please check your email for payment details and next steps.
             </p>
           </div>
         ) : (
@@ -213,6 +214,23 @@ export default function Register() {
                     })}
                   </div>
                 </Field>
+
+                {/* Roommate fields */}
+                {(form.accommodation === "double" || form.accommodation === "triple") && (
+                  <div className="space-y-4 pl-2 border-l-2 border-[rgba(109,217,207,0.2)]">
+                    <p className="text-xs text-nrtf-muted/50 font-sans">
+                      ℹ️ If you leave the roommate field(s) blank, we will match you with a random person.
+                    </p>
+                    <Field label="Roommate Full Name (optional)">
+                      <input className={inputCls} placeholder="e.g. Foulen Ben Falten" value={form.roommate1} onChange={(e) => set("roommate1", e.target.value)} />
+                    </Field>
+                    {form.accommodation === "triple" && (
+                      <Field label="2nd Roommate Full Name (optional)">
+                        <input className={inputCls} placeholder="e.g. Foulen Ben Falten" value={form.roommate2} onChange={(e) => set("roommate2", e.target.value)} />
+                      </Field>
+                    )}
+                  </div>
+                )}
 
                 {/* Facebook */}
                 <Field label="Facebook Profile Link *" error={errors.facebook_link}>

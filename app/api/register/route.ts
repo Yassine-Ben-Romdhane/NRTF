@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     const {
       full_name, email, phone, cin, birthday,
       fac_or_org, participant_type, year,
-      accommodation, facebook_link,
+      accommodation, roommate1, roommate2, facebook_link,
       bus, bus_city,
       hackathon, team_name, team_leader, team_members,
     } = body;
@@ -113,6 +113,8 @@ export async function POST(req: NextRequest) {
       participant_type,
       year: participant_type === "student" ? (year?.trim() ?? "") : "",
       accommodation,
+      roommate1: roommate1?.trim() ?? "",
+      roommate2: accommodation === "triple" ? (roommate2?.trim() ?? "") : "",
       facebook_link: facebook_link.trim(),
       bus,
       bus_city: bus === "yes" ? bus_city : "",
