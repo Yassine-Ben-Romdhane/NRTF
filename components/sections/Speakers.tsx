@@ -15,21 +15,21 @@ interface Member {
 }
 
 const members: Member[] = [
-  { id: "10", name: "Ons Sassi",            role: "Project Manager",            photo: "/oc-members/Ons.png",          color: "#137c55" },
-  { id: "11", name: "Syratt Belhaj Rhouma", role: "Program Manager",            photo: "/oc-members/syratt.png",       color: "#6dd9cf" },
-  { id: "6",  name: "Khalil Khadhraoui",    role: "Sponsoring Manager",         photo: "/oc-members/khalil.png",       color: "#137c55" },
-  { id: "1",  name: "Eya Fetni",            role: "Marketing Manager",          photo: "/oc-members/eya.png",          color: "#6dd9cf" },
-  { id: "2",  name: "Fairouz Ben Youssef",  role: "Event Content Manager",      photo: "/oc-members/fairouza.png",     color: "#137c55" },
-  { id: "3",  name: "Hene Nayet Yahia",     role: "HR Manager",                 photo: "/oc-members/hene.png",         color: "#6dd9cf" },
-  { id: "4",  name: "Ismail Koubaa",        role: "Logistics Manager",          photo: "/oc-members/ismail.png",       color: "#137c55" },
-  { id: "5",  name: "Jihen Somai",          role: "General Secretary",          photo: "/oc-members/jihen.png",        color: "#6dd9cf" },
-  { id: "7",  name: "Ahmed Ben Kilani",     role: "Community Manager",          photo: "/oc-members/kiki.png",         color: "#137c55" },
-  { id: "8",  name: "Malek Mehrzi",         role: "Organization Manager",       photo: "/oc-members/malek.png",        color: "#6dd9cf" },
-  { id: "9",  name: "Nour Assfour",         role: "Training Manager",           photo: "/oc-members/nour.PNG",         color: "#137c55" },
-  { id: "12", name: "Talel Laarif",         role: "Technical Manager",          photo: "/oc-members/talel.png",        color: "#6dd9cf" },
-  { id: "13", name: "Yassine Ben Romdhane", role: "Webmaster",                  photo: "/oc-members/yessin.png",       color: "#137c55" },
-  { id: "14", name: "Yasmine Amouri",       role: "Responsable Visite Ecoles",  photo: "/oc-members/yessmin.png",      color: "#6dd9cf" },
-  { id: "15", name: "Yessmin Chemlali",     role: "Media Manager",              photo: "/oc-members/yessminena.PNG",   color: "#137c55" },
+  { id: "10", name: "Ons Sassi", role: "Project Manager", photo: "/oc-members/Ons.png", color: "#137c55" },
+  { id: "11", name: "Syratt Belhaj Rhouma", role: "Program Manager", photo: "/oc-members/syratt.png", color: "#6dd9cf" },
+  { id: "6", name: "Khalil Khadhraoui", role: "Sponsoring Manager", photo: "/oc-members/khalil.png", color: "#137c55" },
+  { id: "1", name: "Eya Fetni", role: "Marketing Manager", photo: "/oc-members/eya.png", color: "#6dd9cf" },
+  { id: "2", name: "Fairouz Ben Youssef", role: "Event Content Manager", photo: "/oc-members/fairouza.png", color: "#137c55" },
+  { id: "3", name: "Hene Nayet Yahia", role: "HR Manager", photo: "/oc-members/hene.png", color: "#6dd9cf" },
+  { id: "4", name: "Ismail Koubaa", role: "Logistics Manager", photo: "/oc-members/ismail.png", color: "#137c55" },
+  { id: "5", name: "Jihen Somai", role: "General Secretary", photo: "/oc-members/jihen.png", color: "#6dd9cf" },
+  { id: "7", name: "Ahmed Ben Kilani", role: "Community Manager", photo: "/oc-members/kiki.png", color: "#137c55" },
+  { id: "8", name: "Malek Mehrzi", role: "Organization Manager", photo: "/oc-members/malek.png", color: "#6dd9cf" },
+  { id: "9", name: "Nour Asfour", role: "Training Manager", photo: "/oc-members/nour.PNG", color: "#137c55" },
+  { id: "12", name: "Talel Laarif", role: "Technical Manager", photo: "/oc-members/talel.png", color: "#6dd9cf" },
+  { id: "13", name: "Yassine Ben Romdhane", role: "Webmaster", photo: "/oc-members/yessin.png", color: "#137c55" },
+  { id: "14", name: "Yasmine Amouri", role: "Responsable Visite Ecoles", photo: "/oc-members/yessmin.png", color: "#6dd9cf" },
+  { id: "15", name: "Yessmin Chemlali", role: "Media Manager", photo: "/oc-members/yessminena.PNG", color: "#137c55" },
 ];
 
 const MemberCard: React.FC<{ member: Member }> = ({ member }) => (
