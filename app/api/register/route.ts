@@ -131,15 +131,14 @@ export async function POST(req: NextRequest) {
       throw insertError;
     }
 
-    // Fire-and-forget confirmation email
-    void (async () => {
-      try {
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST,
-          port: Number(process.env.SMTP_PORT ?? 587),
-          secure: process.env.SMTP_SECURE === "true",
-          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-        });
+    // Send confirmation email — awaited so Vercel doesn't kill it before it sends
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: Number(process.env.SMTP_PORT ?? 587),
+        secure: process.env.SMTP_SECURE === "true",
+        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+      });
 
         const accommodationLabel: Record<string, string> = {
           single: "Single Room – 335 DT",
@@ -217,9 +216,8 @@ export async function POST(req: NextRequest) {
 </html>`,
         });
       } catch (err) {
-        console.error("Confirmation email failed (non-fatal):", err);
-      }
-    })();
+      console.error("Confirmation email failed (non-fatal):", err);
+    }
 
     // Fire-and-forget Sheets backup
     void appendToSheet([
