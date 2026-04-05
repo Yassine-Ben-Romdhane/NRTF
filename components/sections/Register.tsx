@@ -219,7 +219,7 @@ export default function Register() {
                 {(form.accommodation === "double" || form.accommodation === "triple") && (
                   <div className="space-y-4 pl-2 border-l-2 border-[rgba(109,217,207,0.2)]">
                     <p className="text-xs text-nrtf-muted/50 font-sans">
-                      ℹ️ If you leave the roommate field(s) blank, we will match you with a random person.
+                      ℹ️ If you leave the roommate field(s) blank, you will be matched with a random person. If you prefer to stay alone, choose <strong>Single</strong> or <strong>Double</strong> — and note the price difference between room types.
                     </p>
                     <Field label="Roommate Full Name (optional)">
                       <input className={inputCls} placeholder="e.g. Foulen Ben Falten" value={form.roommate1} onChange={(e) => set("roommate1", e.target.value)} />
