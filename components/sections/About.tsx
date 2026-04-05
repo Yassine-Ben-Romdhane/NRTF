@@ -9,7 +9,7 @@ import { WipeReveal } from "@/components/ui/type-reveal";
 const highlights = [
   "3rd Edition of the National Re-Tech Fusion Congress",
   "3 days of innovation, workshops, competitions & culture",
-  "7,000DT+ in Hackathon prizes",
+  "10.000DT+ in Hackathon prizes",
   "Organised by IEEE PES × PELS Joint Student Chapter at INSAT",
 ];
 
