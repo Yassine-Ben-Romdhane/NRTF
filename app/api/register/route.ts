@@ -140,77 +140,148 @@ export async function POST(req: NextRequest) {
         auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
       });
 
-        const accommodationLabel: Record<string, string> = {
-          single: "Single Room – 335 DT",
-          double: "Double Room – 250 DT",
-          triple: "Triple Room – 230 DT",
-        };
-
         await transporter.sendMail({
           from: process.env.SMTP_FROM ?? process.env.SMTP_USER,
           to: normalizedEmail,
           subject: "NRTF 3.0 – Payment Confirmation & Registration Details",
-          html: `
-<!DOCTYPE html>
+          html: `<!DOCTYPE html>
 <html>
-<body style="font-family:Arial,sans-serif;background:#0f172a;color:#e2e8f0;margin:0;padding:0;">
-  <div style="max-width:600px;margin:40px auto;background:#1e293b;border-radius:12px;overflow:hidden;border:1px solid rgba(109,217,207,0.2);">
-    <div style="background:linear-gradient(135deg,#137c55,#6dd9cf);padding:32px 40px;">
-      <h1 style="margin:0;font-size:22px;color:#fff;">NRTF 3.0</h1>
-      <p style="margin:6px 0 0;color:rgba(255,255,255,0.8);font-size:13px;">Payment Confirmation &amp; Registration Details</p>
+<body style="margin:0;padding:40px 20px;background:#c9e1da;font-family:Arial,Helvetica,sans-serif;">
+  <div style="background:#e6f2ed;max-width:600px;margin:0 auto;border-radius:16px;overflow:hidden;">
+
+    <!-- Header -->
+    <div style="background:#1a3d3b;padding:32px 40px;">
+      <div style="font-size:11px;font-weight:500;letter-spacing:1.5px;color:#7fbfb0;text-transform:uppercase;margin-bottom:8px;">Registration Confirmation</div>
+      <h1 style="margin:0;font-size:22px;color:#ffffff;font-weight:500;line-height:1.3;">Payment Details &amp; Next Steps</h1>
     </div>
+
+    <!-- Body -->
     <div style="padding:32px 40px;">
-      <p>Dear <strong>${full_name.trim()}</strong>,</p>
-      <p>Welcome to NRTF 3.0! We're thrilled to have you on board and look forward to an exciting and enriching experience together.</p>
-      <p>To secure your spot, please complete your payment using the details below.</p>
+      <p style="font-size:15px;color:#2a5250;margin:0 0 6px 0;">Dear <strong>${full_name.trim()}</strong>,</p>
+      <p style="font-size:15px;color:#3a4a48;line-height:1.7;margin:0 0 24px 0;">Welcome to <strong>NRTF 3.0</strong>! We're thrilled to have you on board and look forward to an exciting and enriching experience together. To secure your spot, please complete your payment using the details below.</p>
 
-      <div style="background:rgba(109,217,207,0.06);border:1px solid rgba(109,217,207,0.15);border-radius:8px;padding:20px;margin:24px 0;">
-        <h3 style="margin:0 0 12px;color:#6dd9cf;font-size:14px;text-transform:uppercase;letter-spacing:0.1em;">Payment Information</h3>
-        <p style="margin:0 0 8px;">⏳ <strong>Deadline: April 20th, 2026</strong></p>
-        <p style="margin:0;color:rgba(226,232,240,0.7);font-size:13px;">Your registration is only confirmed once payment is completed. As spots are limited and allocated on a first-come, first-served basis, we encourage you to act promptly.</p>
+      <!-- Payment deadline -->
+      <div style="background:#cfe6d9;border-radius:10px;padding:20px 24px;margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:1.2px;color:#2a6e5a;text-transform:uppercase;margin-bottom:12px;">Payment deadline</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <span style="background:#1a3d3b;color:#7fbfb0;font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:6px;white-space:nowrap;">Deadline</span>
+          <span style="font-size:15px;font-weight:500;color:#1a3d3b;">April 20th, 2026</span>
+        </div>
+        <p style="font-size:14px;color:#2a3d3a;line-height:1.6;margin:0;">Your registration is only confirmed once payment is completed. Spots are limited and allocated on a <strong>first-come, first-served basis</strong> — we encourage you to act promptly.</p>
       </div>
 
-      <div style="background:rgba(19,124,85,0.08);border:1px solid rgba(19,124,85,0.2);border-radius:8px;padding:20px;margin:24px 0;">
-        <h3 style="margin:0 0 12px;color:#6dd9cf;font-size:14px;text-transform:uppercase;letter-spacing:0.1em;">Your Accommodation</h3>
-        <p style="margin:0;font-size:15px;"><strong>${accommodationLabel[accommodation] ?? accommodation}</strong></p>
+      <!-- Accommodation fees -->
+      <div style="background:#cfe6d9;border-radius:10px;padding:20px 24px;margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:1.2px;color:#2a6e5a;text-transform:uppercase;margin-bottom:12px;">Accommodation fees</div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:8px;">
+          <tr>
+            <td style="background:#e6f2ed;border-radius:8px;padding:12px;text-align:center;width:33%;">
+              <div style="font-size:11px;color:#5a7a76;margin-bottom:4px;">Single room</div>
+              <div style="font-size:16px;font-weight:500;color:#1a3d3b;">335 DT</div>
+            </td>
+            <td style="background:#e6f2ed;border-radius:8px;padding:12px;text-align:center;width:33%;">
+              <div style="font-size:11px;color:#5a7a76;margin-bottom:4px;">Double room</div>
+              <div style="font-size:16px;font-weight:500;color:#1a3d3b;">250 DT</div>
+            </td>
+            <td style="background:#e6f2ed;border-radius:8px;padding:12px;text-align:center;width:33%;">
+              <div style="font-size:11px;color:#5a7a76;margin-bottom:4px;">Triple room</div>
+              <div style="font-size:16px;font-weight:500;color:#1a3d3b;">230 DT</div>
+            </td>
+          </tr>
+        </table>
       </div>
 
-      <p style="color:rgba(226,232,240,0.8);font-size:13px;background:rgba(255,200,0,0.06);border:1px solid rgba(255,200,0,0.2);border-radius:8px;padding:14px;">
-        ⚠️ <strong>Important:</strong> If you are sharing a room or in need of a roommate, please contact us first before making any payment. Do not pay until you have coordinated with us.
-      </p>
+      <!-- D17 payment process -->
+      <div style="background:#cfe6d9;border-radius:10px;padding:20px 24px;margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:500;letter-spacing:1.2px;color:#2a6e5a;text-transform:uppercase;margin-bottom:12px;">D17 payment process</div>
+        <p style="font-size:14px;color:#2a3d3a;line-height:1.6;margin:0 0 14px 0;">Please reach out to one of the organizers below first — they will provide you with the D17 payment details.</p>
 
-      <div style="margin:24px 0;">
-        <h3 style="color:#6dd9cf;font-size:14px;text-transform:uppercase;letter-spacing:0.1em;">D17 Payment Process</h3>
-        <p style="font-size:13px;color:rgba(226,232,240,0.8);">To pay via D17, please reach out to one of the following organizers first — they will provide you with the D17 payment details:</p>
-        <ul style="font-size:13px;line-height:2;padding-left:20px;">
-          <li>📞 <strong>Ons Sassi</strong>, Project Manager: 56 402 968</li>
-          <li>📞 <strong>Hene Nayet Yahia</strong>, HR Manager: 21 869 840</li>
-          <li>📞 <strong>Khalil Khadhraoui</strong>, Sponsorship Manager: 52 529 512</li>
-        </ul>
-        <p style="font-size:12px;color:rgba(226,232,240,0.5);">📌 These are contact numbers only, not D17 payment numbers. Once you receive the payment details and complete your transfer, send a screenshot to the same contact to validate your registration.</p>
-        <p style="font-size:12px;color:rgba(226,232,240,0.5);">⚠️ D17 applies a 1% transaction fee. Please include it to ensure the correct amount is received.</p>
+        <!-- Contact: Ons -->
+        <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:12px;">
+          <tr>
+            <td width="36" valign="middle">
+              <div style="width:36px;height:36px;border-radius:50%;background:#1a3d3b;text-align:center;line-height:36px;font-size:12px;font-weight:500;color:#7fbfb0;">OS</div>
+            </td>
+            <td style="padding-left:12px;" valign="middle">
+              <div style="font-size:14px;font-weight:500;color:#1a3d3b;">Ons Sassi</div>
+              <div style="font-size:12px;color:#5a7a76;">Project Manager</div>
+            </td>
+            <td align="right" valign="middle">
+              <span style="font-size:13px;color:#2a5250;font-weight:500;">56 402 968</span>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Contact: Hene -->
+        <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:12px;">
+          <tr>
+            <td width="36" valign="middle">
+              <div style="width:36px;height:36px;border-radius:50%;background:#1a3d3b;text-align:center;line-height:36px;font-size:12px;font-weight:500;color:#7fbfb0;">HN</div>
+            </td>
+            <td style="padding-left:12px;" valign="middle">
+              <div style="font-size:14px;font-weight:500;color:#1a3d3b;">Hene Nayet Yahia</div>
+              <div style="font-size:12px;color:#5a7a76;">HR Manager</div>
+            </td>
+            <td align="right" valign="middle">
+              <span style="font-size:13px;color:#2a5250;font-weight:500;">21 869 840</span>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Contact: Khalil -->
+        <table cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td width="36" valign="middle">
+              <div style="width:36px;height:36px;border-radius:50%;background:#1a3d3b;text-align:center;line-height:36px;font-size:12px;font-weight:500;color:#7fbfb0;">KK</div>
+            </td>
+            <td style="padding-left:12px;" valign="middle">
+              <div style="font-size:14px;font-weight:500;color:#1a3d3b;">Khalil Khadhraoui</div>
+              <div style="font-size:12px;color:#5a7a76;">Sponsorship Manager</div>
+            </td>
+            <td align="right" valign="middle">
+              <span style="font-size:13px;color:#2a5250;font-weight:500;">52 529 512</span>
+            </td>
+          </tr>
+        </table>
+
+        <div style="background:#b8d9cc;border-left:3px solid #1a3d3b;border-radius:0 8px 8px 0;padding:12px 16px;margin-top:12px;font-size:13px;color:#1a3d3b;line-height:1.6;">
+          These are contact numbers only, not D17 payment numbers. Once you receive the details and complete your transfer, please send a screenshot to the same contact to validate your registration. Note that D17 applies a <strong>1% transaction fee</strong> — please include it to ensure the correct amount is received.
+        </div>
       </div>
 
-      <div style="border-top:1px solid rgba(109,217,207,0.1);padding-top:20px;margin-top:24px;">
-        <h3 style="color:#6dd9cf;font-size:14px;text-transform:uppercase;letter-spacing:0.1em;">Reminders</h3>
-        <ul style="font-size:13px;color:rgba(226,232,240,0.8);line-height:2;padding-left:20px;">
-          <li>Your spot is only confirmed after payment validation</li>
-          <li>Places are limited — complete payment as soon as possible</li>
-          <li>If you're attending with friends, please remind them of the deadline</li>
-        </ul>
-      </div>
+      <!-- Divider -->
+      <hr style="border:none;border-top:1px solid #b8d9cc;margin:24px 0;">
 
-      <p style="font-size:13px;color:rgba(226,232,240,0.8);">If you have any questions or need assistance, feel free to contact:<br/>
-        📞 Ons Sassi: 56 402 968<br/>
-        📞 Hene Nayet Yahia: 21 869 840
-      </p>
+      <!-- Reminders -->
+      <div style="font-size:11px;font-weight:500;letter-spacing:1.2px;color:#2a6e5a;text-transform:uppercase;margin-bottom:12px;">Reminders</div>
+      <ul style="margin:0 0 24px 0;padding-left:20px;list-style:disc;">
+        <li style="font-size:14px;color:#2a3d3a;line-height:1.5;margin-bottom:8px;">Your spot is only confirmed after payment validation.</li>
+        <li style="font-size:14px;color:#2a3d3a;line-height:1.5;margin-bottom:8px;">Places are limited — complete your payment as soon as possible.</li>
+        <li style="font-size:14px;color:#2a3d3a;line-height:1.5;margin-bottom:8px;">If you're attending with friends, please remind them of the deadline.</li>
+        <li style="font-size:14px;color:#2a3d3a;line-height:1.5;">If you are registering as a team, all members must enter the <strong>exact same team name</strong> with the <strong>same spelling</strong> when filling out the form.</li>
+      </ul>
 
-      <p style="margin-top:32px;">We look forward to welcoming you to NRTF 3.0 ✨</p>
-      <p style="color:rgba(226,232,240,0.6);font-size:13px;">Best regards,<br/><strong>NRTF 3.0 Team</strong></p>
+      <!-- Divider -->
+      <hr style="border:none;border-top:1px solid #b8d9cc;margin:24px 0;">
+
+      <!-- Help -->
+      <p style="font-size:14px;color:#3a4a48;line-height:1.7;margin:0 0 16px 0;">If you have any questions or need assistance, feel free to reach out:</p>
+      <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+        <tr>
+          <td style="font-size:13px;padding-right:20px;"><strong style="color:#1a3d3b;">Ons Sassi</strong> <span style="color:#5a7a76;">— 56 402 968</span></td>
+          <td style="font-size:13px;"><strong style="color:#1a3d3b;">Hene Nayet Yahia</strong> <span style="color:#5a7a76;">— 21 869 840</span></td>
+        </tr>
+      </table>
+
+      <p style="font-size:15px;color:#3a4a48;line-height:1.7;margin:0;">We look forward to welcoming you to <strong>NRTF 3.0</strong>.</p>
     </div>
-    <div style="background:rgba(0,0,0,0.2);padding:16px 40px;text-align:center;font-size:11px;color:rgba(226,232,240,0.3);">
-      © 2026 National Re-Tech Fusion · INSAT, Tunis, Tunisia
+
+    <!-- Footer -->
+    <div style="border-top:1px solid #b8d9cc;padding:20px 40px;">
+      <div style="font-size:13px;font-weight:500;color:#1a3d3b;">NRTF 3.0 Team</div>
+      <div style="font-size:12px;color:#5a7a76;">Best regards</div>
     </div>
+
   </div>
 </body>
 </html>`,
