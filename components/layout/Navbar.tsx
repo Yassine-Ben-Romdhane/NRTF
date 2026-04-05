@@ -4,17 +4,17 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { href: "#about",    label: "About" },
-  { href: "#axes",     label: "Our Axes" },
+  { href: "#about", label: "About" },
+  { href: "#axes", label: "Our Axes" },
   { href: "#schedule", label: "Schedule" },
-  { href: "#speakers", label: "Speakers" },
+  { href: "#speakers", label: "OC" },
   { href: "#sponsors", label: "Sponsors" },
-  { href: "#faq",      label: "FAQ" },
+  { href: "#faq", label: "FAQ" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen]         = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -26,11 +26,10 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
           ? "backdrop-blur-xl border-b border-[rgba(109,217,207,0.15)] shadow-[0_4px_30px_rgba(0,0,0,0.2)]"
           : ""
-      }`}
+        }`}
       style={scrolled ? { background: "rgb(var(--rgb-bg) / 0.92)" } : {}}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">

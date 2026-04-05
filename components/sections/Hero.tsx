@@ -134,7 +134,7 @@ export default function Hero() {
         className="absolute bottom-16 right-8 md:right-16 lg:right-24 z-20 text-right hidden md:block"
       >
         <p className="text-white/20 text-xs font-sans uppercase tracking-widest mb-1">Location</p>
-        <p className="text-white/50 text-sm font-sans font-semibold">INSAT, Tunis</p>
+        <p className="text-white/50 text-sm font-sans font-semibold">Hotel Rivera, Sousse</p>
         <p className="text-white/20 text-xs font-sans uppercase tracking-widest mt-3 mb-1">Date</p>
         <p className="text-white/50 text-sm font-sans font-semibold">1–3 May 2026</p>
       </motion.div>
