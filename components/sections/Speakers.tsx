@@ -6,41 +6,30 @@ import { WipeReveal } from "@/components/ui/type-reveal";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-function LinkedinIcon({ size = 15 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect x="2" y="9" width="4" height="12" />
-      <circle cx="4" cy="4" r="2" />
-    </svg>
-  );
-}
-
 interface Member {
   id: string;
   name: string;
   role: string;
   photo: string;
-  linkedinUrl: string;
   color: string;
 }
 
 const members: Member[] = [
-  { id: "1",  name: "Eya",         role: "Member", photo: "/oc-members/eya.png",         linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "2",  name: "Fairouza",    role: "Member", photo: "/oc-members/fairouza.png",    linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "3",  name: "Hene",        role: "Member", photo: "/oc-members/hene.png",        linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "4",  name: "Ismail",      role: "Member", photo: "/oc-members/ismail.png",      linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "5",  name: "Jihen",       role: "Member", photo: "/oc-members/jihen.png",       linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "6",  name: "Khalil",      role: "Member", photo: "/oc-members/khalil.png",      linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "7",  name: "Kiki",        role: "Member", photo: "/oc-members/kiki.png",        linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "8",  name: "Malek",       role: "Member", photo: "/oc-members/malek.png",       linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "9",  name: "Nour",        role: "Member", photo: "/oc-members/nour.PNG",        linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "10", name: "Ons",         role: "Member", photo: "/oc-members/Ons.png",         linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "11", name: "Syratt",      role: "Member", photo: "/oc-members/syratt.png",      linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "12", name: "Talel",       role: "Member", photo: "/oc-members/talel.png",       linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "13", name: "Yessin",      role: "Member", photo: "/oc-members/yessin.png",      linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
-  { id: "14", name: "Yessmin",     role: "Member", photo: "/oc-members/yessmin.png",     linkedinUrl: "https://linkedin.com", color: "#137c55" },
-  { id: "15", name: "Yessminena",  role: "Member", photo: "/oc-members/yessminena.PNG",  linkedinUrl: "https://linkedin.com", color: "#6dd9cf" },
+  { id: "10", name: "Ons Sassi",            role: "Project Manager",            photo: "/oc-members/Ons.png",          color: "#137c55" },
+  { id: "11", name: "Syratt Belhaj Rhouma", role: "Program Manager",            photo: "/oc-members/syratt.png",       color: "#6dd9cf" },
+  { id: "6",  name: "Khalil Khadhraoui",    role: "Sponsoring Manager",         photo: "/oc-members/khalil.png",       color: "#137c55" },
+  { id: "1",  name: "Eya Fetni",            role: "Marketing Manager",          photo: "/oc-members/eya.png",          color: "#6dd9cf" },
+  { id: "2",  name: "Fairouz Ben Youssef",  role: "Event Content Manager",      photo: "/oc-members/fairouza.png",     color: "#137c55" },
+  { id: "3",  name: "Hene Nayet Yahia",     role: "HR Manager",                 photo: "/oc-members/hene.png",         color: "#6dd9cf" },
+  { id: "4",  name: "Ismail Koubaa",        role: "Logistics Manager",          photo: "/oc-members/ismail.png",       color: "#137c55" },
+  { id: "5",  name: "Jihen Somai",          role: "General Secretary",          photo: "/oc-members/jihen.png",        color: "#6dd9cf" },
+  { id: "7",  name: "Ahmed Ben Kilani",     role: "Community Manager",          photo: "/oc-members/kiki.png",         color: "#137c55" },
+  { id: "8",  name: "Malek Mehrzi",         role: "Organization Manager",       photo: "/oc-members/malek.png",        color: "#6dd9cf" },
+  { id: "9",  name: "Nour Assfour",         role: "Training Manager",           photo: "/oc-members/nour.PNG",         color: "#137c55" },
+  { id: "12", name: "Talel Laarif",         role: "Technical Manager",          photo: "/oc-members/talel.png",        color: "#6dd9cf" },
+  { id: "13", name: "Yassine Ben Romdhane", role: "Webmaster",                  photo: "/oc-members/yessin.png",       color: "#137c55" },
+  { id: "14", name: "Yasmine Amouri",       role: "Responsable Visite Ecoles",  photo: "/oc-members/yessmin.png",      color: "#6dd9cf" },
+  { id: "15", name: "Yessmin Chemlali",     role: "Media Manager",              photo: "/oc-members/yessminena.PNG",   color: "#137c55" },
 ];
 
 const MemberCard: React.FC<{ member: Member }> = ({ member }) => (
@@ -69,19 +58,6 @@ const MemberCard: React.FC<{ member: Member }> = ({ member }) => (
 
       {/* Overlay */}
       <div className="absolute inset-0 bg-nrtf-bg/30 group-hover:bg-nrtf-bg/0 transition-all duration-500" />
-
-      {/* LinkedIn — slides up on hover */}
-      <a
-        href={member.linkedinUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`${member.name} on LinkedIn`}
-        onClick={e => e.stopPropagation()}
-        className="absolute bottom-2 right-2 w-8 h-8 rounded-full flex items-center justify-center translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300"
-        style={{ background: member.color, color: "#0f172a" }}
-      >
-        <LinkedinIcon size={13} />
-      </a>
 
       {/* Bottom accent bar */}
       <div

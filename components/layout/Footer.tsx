@@ -57,17 +57,6 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://linkedin.com/company/YOUR_HANDLE"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-nrtf-muted/50 hover:text-nrtf-light transition-colors"
-                aria-label="LinkedIn"
-              >
-                <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-                </svg>
-              </a>
-              <a
                 href="https://www.facebook.com/profile.php?id=61556516330833"
                 target="_blank"
                 rel="noopener noreferrer"
