@@ -238,6 +238,9 @@ export default function Register() {
                 </Field>
 
                 {/* Bus */}
+                <p className="text-xs text-nrtf-muted/50 font-sans -mb-2">
+                  🚌 We are gathering interest numbers for bus transportation — your answer helps us plan. We will confirm availability and send you full details via email.
+                </p>
                 <Field label="Bus Transportation *" error={errors.bus}>
                   <div className="flex gap-4">
                     {[{ value: "yes", label: "Yes" }, { value: "no", label: "No" }].map((opt) => (
