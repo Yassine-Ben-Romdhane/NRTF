@@ -53,7 +53,7 @@ export default function Footer() {
               {ORG_BADGES.map((org) => (
                 <div
                   key={org.name}
-                  className="flex items-center gap-2 border border-[rgba(109,217,207,0.08)] px-3 py-1.5 rounded"
+                  className="flex items-center gap-2 px-3 py-1.5"
                 >
                   {org.logos.map((logo) => (
                     <div key={logo.alt} className="relative h-6 w-10 flex-shrink-0">
