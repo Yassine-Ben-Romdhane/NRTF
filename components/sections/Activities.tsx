@@ -296,7 +296,7 @@ export default function Activities() {
           transition={{ duration: 0.5 }}
           className="mb-16 text-center px-8 md:px-16 lg:px-24"
         >
-          <WipeReveal delay={100}>
+          <WipeReveal delay={100} className="text-center">
             <h2 className="font-display text-4xl md:text-5xl text-nrtf-text leading-tight">
               <span className="italic font-normal">What&apos;s</span>{" "}
               <span className="font-bold">
