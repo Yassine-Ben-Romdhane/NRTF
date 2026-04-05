@@ -21,14 +21,14 @@ const inputCls = "w-full bg-white/5 border border-[rgba(109,217,207,0.15)] round
 
 const INFO_CARDS = [
   { Icon: Calendar, title: "1–3 May 2026", sub: "Three days of innovation" },
-  { Icon: MapPin, title: "INSAT, Tunis", sub: "Institut National des Sciences Appliquées" },
-  { Icon: Ticket, title: "Free Entry", sub: "Open to all students and professionals" },
+  { Icon: MapPin, title: "Hotel Rivera, Sousse", sub: "4-star Venue" },
+  { Icon: Ticket, title: "Everyone is welcome", sub: "Open to all students and professionals" },
 ];
 
 const ACCOMMODATION = [
-  { value: "single", label: "Single", price: "300 DT" },
+  { value: "single", label: "Single", price: "335 DT" },
   { value: "double", label: "Double", price: "250 DT" },
-  { value: "triple", label: "Triple", price: "200 DT" },
+  { value: "triple", label: "Triple", price: "230 DT" },
 ];
 
 export default function Register() {
@@ -184,7 +184,7 @@ export default function Register() {
                     </div>
                   </Field>
                   <Field label="Faculty / Organization Name *" error={errors.fac_or_org}>
-                    <input className={inputCls} placeholder="e.g. INSAT or IEEE" value={form.fac_or_org} onChange={(e) => set("fac_or_org", e.target.value)} />
+                    <input className={inputCls} placeholder="e.g. INSAT" value={form.fac_or_org} onChange={(e) => set("fac_or_org", e.target.value)} />
                   </Field>
                 </div>
 
