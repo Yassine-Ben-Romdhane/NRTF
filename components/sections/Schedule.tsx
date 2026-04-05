@@ -11,9 +11,9 @@ const days = [
     color: "#137c55",
     label: "Opening Day",
     events: [
-      { time: "14:00", name: "Opening Ceremony",                        description: "Kick off NRTF 3.0 with keynote addresses, welcome speeches, and the official launch of all congress tracks." },
-      { time: "16:00", name: "Films & Art / Science Exhibition",        description: "Short film projections (courts métrages) paired with an artistic and scientific exhibition — creativity meets innovation." },
-      { time: "21:30", name: "Social Activities",                       description: "Evening networking with organized games, music, and opportunities to connect with fellow attendees and speakers." },
+      { time: "14:00", name: "Opening Ceremony", description: "Kick off NRTF 3.0 with keynote addresses, welcome speeches, and the official launch of all congress tracks." },
+      { time: "16:00", name: "Films & Art / Science Exhibition", description: "Short film projections (courts métrages) paired with an artistic and scientific exhibition — creativity meets innovation." },
+      { time: "21:30", name: "Social Activities", description: "Evening networking with organized games, music, and opportunities to connect with fellow attendees and speakers." },
     ],
   },
   {
@@ -22,8 +22,8 @@ const days = [
     color: "#6dd9cf",
     label: "Innovation Day",
     events: [
-      { time: "08:00", name: "Hackathon",            description: "Teams receive their challenges and begin building innovative solutions across energy, electronics, and AI tracks." },
-      { time: "09:00", name: "Certified Workshops",  description: "Hands-on technical workshops led by industry experts, covering cutting-edge tools and methodologies." },
+      { time: "08:00", name: "Hackathon", description: "Teams receive their challenges and begin building innovative solutions across energy, electronics, and AI tracks." },
+      { time: "09:00", name: "Certified Workshops", description: "Hands-on technical workshops led by industry experts, covering cutting-edge tools and methodologies." },
     ],
   },
   {
@@ -32,9 +32,9 @@ const days = [
     color: "#6dd9cf",
     label: "Awards Day",
     events: [
-      { time: "08:30", name: "Pitching Session",     description: "Hackathon teams present their solutions to a jury panel of investors, engineers, and industry professionals." },
-      { time: "11:30", name: "Closing Ceremony",     description: "Final reflections, announcements of future NRTF initiatives, and heartfelt gratitude to all partners and attendees." },
-      { time: "12:00", name: "Remise des Prix",      description: "Recognition and celebration of outstanding participants, teams, and projects across all congress tracks and competitions." },
+      { time: "08:30", name: "Pitching Session", description: "Hackathon teams present their solutions to a jury panel of investors, engineers, and industry professionals." },
+      { time: "11:30", name: "Closing Ceremony", description: "Final reflections, announcements of future NRTF initiatives, and heartfelt gratitude to all partners and attendees." },
+      { time: "12:00", name: "Award Ceremony", description: "Recognition and celebration of outstanding participants, teams, and projects across all congress tracks and competitions." },
     ],
   },
 ];
