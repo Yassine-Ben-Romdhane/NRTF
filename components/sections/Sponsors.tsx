@@ -5,24 +5,26 @@ import { Marquee } from "@/components/ui/marquee";
 import { WipeReveal } from "@/components/ui/type-reveal";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
-function SponsorLogo({ src, name }: { src: string; name: string }) {
+function SponsorLogo({ src, name, imgStyle }: { src: string; name: string; imgStyle?: React.CSSProperties }) {
   return (
     <div className="mx-14 flex flex-col items-center gap-3 opacity-50 hover:opacity-100 transition-opacity duration-300 cursor-pointer select-none">
       <div className="relative h-14 w-40">
-        <Image src={src} alt={name} fill className="object-contain" />
+        <Image src={src} alt={name} fill className="object-contain" style={imgStyle} />
       </div>
       <span className="text-xs font-sans uppercase tracking-widest text-nrtf-muted/70">{name}</span>
     </div>
   );
 }
 
+// Logos with white backgrounds need invert(1) to appear on the dark site background.
+// The PES section logo has a black background → mix-blend-mode:screen drops the black.
 const SPONSORS = [
-  { name: "INSAT Student Branch", src: "/partners/Insat student branch.png" },
-  { name: "INSAT",                src: "/partners/Insat-removebg-preview.png" },
-  { name: "IEEE PELS",            src: "/partners/pels.png" },
-  { name: "IEEE PES Section",     src: "/partners/pes section .png" },
-  { name: "PES INSAT",            src: "/partners/pesinsat.png" },
-  { name: "Primavera",            src: "/partners/primavera.png" },
+  { name: "INSAT Student Branch", src: "/partners/Insat student branch.png",    imgStyle: { filter: "invert(1)" } },
+  { name: "INSAT",                src: "/partners/Insat-removebg-preview.png",  imgStyle: { filter: "invert(1)" } },
+  { name: "IEEE PELS",            src: "/partners/pels.png",                    imgStyle: { filter: "invert(1)" } },
+  { name: "IEEE PES Section",     src: "/partners/pes section .png",            imgStyle: { mixBlendMode: "screen" as const, filter: "brightness(1.4)" } },
+  { name: "PES INSAT",            src: "/partners/pesinsat.png",               imgStyle: { filter: "invert(1)" } },
+  { name: "Primavera",            src: "/partners/primavera.png",               imgStyle: undefined },
 ];
 
 export default function Sponsors() {
@@ -47,7 +49,7 @@ export default function Sponsors() {
       {/* Single scrolling row */}
       <Marquee duration={35} pauseOnHover fadeAmount={8}>
         {SPONSORS.map((s) => (
-          <SponsorLogo key={s.name} src={s.src} name={s.name} />
+          <SponsorLogo key={s.name} src={s.src} name={s.name} imgStyle={s.imgStyle} />
         ))}
       </Marquee>
 

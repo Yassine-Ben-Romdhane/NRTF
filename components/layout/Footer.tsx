@@ -1,7 +1,24 @@
 "use client";
 
+import Image from "next/image";
 import { Mail } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/scroll-reveal";
+
+const ORG_BADGES = [
+  {
+    name: "IEEE PES × PELS Joint Student Chapter",
+    logos: [
+      { src: "/partners/pesinsat.png",  alt: "IEEE PES INSAT" },
+      { src: "/partners/pels.png",      alt: "IEEE PELS INSAT" },
+    ],
+  },
+  {
+    name: "INSAT IEEE Student Branch",
+    logos: [
+      { src: "/partners/Insat student branch.png", alt: "INSAT IEEE Student Branch" },
+    ],
+  },
+];
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -33,13 +50,18 @@ export default function Footer() {
 
             {/* Org badges */}
             <div className="flex items-center gap-3 flex-wrap justify-center">
-              {["IEEE PES × PELS Joint Student Chapter", "INSAT IEEE Student Branch"].map((org) => (
-                <span
-                  key={org}
-                  className="text-xs font-sans text-nrtf-muted/50 border border-[rgba(109,217,207,0.08)] px-2.5 py-1 rounded"
+              {ORG_BADGES.map((org) => (
+                <div
+                  key={org.name}
+                  className="flex items-center gap-2 border border-[rgba(109,217,207,0.08)] px-3 py-1.5 rounded"
                 >
-                  {org}
-                </span>
+                  {org.logos.map((logo) => (
+                    <div key={logo.alt} className="relative h-6 w-10 flex-shrink-0">
+                      <Image src={logo.src} alt={logo.alt} fill className="object-contain" style={{ filter: "invert(1)", opacity: 0.7 }} />
+                    </div>
+                  ))}
+                  <span className="text-xs font-sans text-nrtf-muted/50">{org.name}</span>
+                </div>
               ))}
             </div>
 
