@@ -224,6 +224,28 @@ export default function Activities() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [paddingX, setPaddingX] = useState(32);
+
+  // Compute padding so that card 0 is centered at scrollLeft=0
+  const computePadding = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const p = Math.max(32, Math.floor(el.clientWidth / 2 - CARD_WIDTH / 2));
+    setPaddingX(p);
+  }, []);
+
+  // Center card 0 on mount once padding is known
+  useEffect(() => {
+    computePadding();
+    const el = scrollRef.current;
+    if (el) el.scrollLeft = 0;
+  }, [computePadding]);
+
+  // Recompute on resize
+  useEffect(() => {
+    window.addEventListener("resize", computePadding);
+    return () => window.removeEventListener("resize", computePadding);
+  }, [computePadding]);
 
   const updateScrollState = useCallback(() => {
     const el = scrollRef.current;
@@ -232,12 +254,9 @@ export default function Activities() {
     setCanScrollLeft(el.scrollLeft > 5);
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 5);
 
-    // Determine which card is closest to center
-    const center = el.scrollLeft + el.clientWidth / 2;
+    // Which card center is closest to viewport center
     const cardStep = CARD_WIDTH + CARD_GAP;
-    // Account for the initial padding
-    const paddingLeft = el.clientWidth / 2 - CARD_WIDTH / 2;
-    const idx = Math.round((center - paddingLeft - CARD_WIDTH / 2) / cardStep);
+    const idx = Math.round(el.scrollLeft / cardStep);
     setActiveIdx(Math.max(0, Math.min(idx, activities.length - 1)));
   }, []);
 
@@ -252,20 +271,14 @@ export default function Activities() {
   const scrollTo = (dir: -1 | 1) => {
     const el = scrollRef.current;
     if (!el) return;
-    el.scrollBy({
-      left: dir * (CARD_WIDTH + CARD_GAP),
-      behavior: "smooth",
-    });
+    el.scrollBy({ left: dir * (CARD_WIDTH + CARD_GAP), behavior: "smooth" });
   };
 
+  // scrollLeft = idx * step centers card[idx] given the symmetric padding
   const scrollToCard = (idx: number) => {
     const el = scrollRef.current;
     if (!el) return;
-    const paddingLeft = el.clientWidth / 2 - CARD_WIDTH / 2;
-    el.scrollTo({
-      left: idx * (CARD_WIDTH + CARD_GAP) - paddingLeft + CARD_WIDTH / 2,
-      behavior: "smooth",
-    });
+    el.scrollTo({ left: idx * (CARD_WIDTH + CARD_GAP), behavior: "smooth" });
   };
 
   return (
@@ -355,8 +368,8 @@ export default function Activities() {
               WebkitOverflowScrolling: "touch",
               scrollbarWidth: "none",
               msOverflowStyle: "none",
-              paddingLeft: `max(2rem, calc(50vw - ${CARD_WIDTH / 2}px))`,
-              paddingRight: `max(2rem, calc(50vw - ${CARD_WIDTH / 2}px))`,
+              paddingLeft: paddingX,
+              paddingRight: paddingX,
             }}
           >
             {activities.map((activity, i) => (
