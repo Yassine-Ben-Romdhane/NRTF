@@ -290,8 +290,8 @@ export async function POST(req: NextRequest) {
       console.error("Confirmation email failed (non-fatal):", err);
     }
 
-    // Fire-and-forget Sheets backup
-    void appendToSheet([
+    // Awaited Sheets backup so Vercel doesn't kill it before it writes
+    await appendToSheet([
       full_name.trim(),
       normalizedEmail,
       phone.trim(),
