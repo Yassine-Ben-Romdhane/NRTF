@@ -25,6 +25,10 @@ const SPONSORS = [
   { name: "IEEE PES Section",     src: "/partners/pes section .png",            imgStyle: { mixBlendMode: "screen" as const, filter: "brightness(1.4)" } },
   { name: "PES INSAT",            src: "/partners/pesinsat.png",               imgStyle: { filter: "invert(1)" } },
   { name: "Primavera",            src: "/partners/primavera.png",               imgStyle: undefined },
+  { name: "iSol Metal",           src: "/partners/isolmetal.png",               imgStyle: undefined },
+  { name: "Kilani Groupe",        src: "/partners/kilani.png",                  imgStyle: undefined },
+  { name: "Tunisian Automotive Association", src: "/partners/taa.png",          imgStyle: undefined },
+  { name: "Orange Digital Center", src: "/partners/orange-digital-center.png", imgStyle: undefined },
 ];
 
 export default function Sponsors() {
