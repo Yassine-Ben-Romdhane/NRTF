@@ -63,8 +63,8 @@ export default function Schedule() {
         <div className="relative mb-12">
           <WipeReveal>
             <h2 className="font-display text-5xl md:text-6xl text-nrtf-text leading-tight">
-              <span className="italic font-normal">Our</span>{" "}
-              <span className="font-bold"><span className="gradient-text">Schedule</span></span>
+              <span className="italic font-normal">2026</span>{" "}
+              <span className="font-bold"><span className="gradient-text">Program</span></span>
             </h2>
           </WipeReveal>
           <p className="text-nrtf-muted/40 text-sm mt-3 font-sans">

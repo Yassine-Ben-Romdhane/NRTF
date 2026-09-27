@@ -8,7 +8,7 @@ import Activities   from "@/components/sections/Activities";
 import FAQ          from "@/components/sections/FAQ";
 import Speakers     from "@/components/sections/Speakers";
 import Sponsors     from "@/components/sections/Sponsors";
-import Register     from "@/components/sections/Register";
+import EventArchive from "@/components/sections/EventArchive";
 
 export default function Home() {
   return (
@@ -21,7 +21,7 @@ export default function Home() {
         <Activities />
         <Speakers />
         <Sponsors />
-        <Register />
+        <EventArchive />
         <FAQ />
         <Footer />
       </main>

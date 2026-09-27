@@ -8,28 +8,28 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 const faqs = [
   {
-    q: "Who can participate in NRTF 3.0?",
-    a: "NRTF 3.0 is open to all engineering and science students from Tunisian universities, regardless of their year or field of study. Professionals and researchers are also welcome to attend.",
+    q: "Who was NRTF 3.0 for?",
+    a: "The 2026 edition welcomed engineering and science students, professionals, and researchers from Tunisia and beyond.",
   },
   {
-    q: "When and where does the event take place?",
-    a: "NRTF 3.0 takes place from May 1st to 3rd, 2026 at a 4-star hotel! Hotel Rivera, Sousse.",
+    q: "When and where was NRTF 3.0 held?",
+    a: "The congress took place 1–3 May 2026 at Hotel Rivera in Sousse, Tunisia.",
   },
   {
-    q: "Do I need to be an IEEE member to register?",
-    a: "No, IEEE membership is not required.",
+    q: "Was IEEE membership required?",
+    a: "No, IEEE membership was not required for the 2026 edition.",
   },
   {
-    q: "Can I participate in the Hackathon alone or do I need a team?",
-    a: "Teams of 2 to 5 members are preferred for the Hackathon.",
+    q: "What was the hackathon team size?",
+    a: "The 2026 program preferred teams of 2 to 5 members.",
   },
   {
-    q: "What should I bring to the event?",
-    a: "Bring your student ID, a laptop (especially for the Hackathon and workshops), and your enthusiasm! Meals and refreshments will be provided during the event days.",
+    q: "Can I still register?",
+    a: "No. NRTF 3.0 ended on 3 May 2026, and registration is closed.",
   },
   {
-    q: "How can my company become a sponsor?",
-    a: "Contact us at national.re.tech.fusion.ieee.insat@gmail.com for sponsorship packages and partnership opportunities tailored to your company's goals.",
+    q: "Who organized the 2026 edition?",
+    a: "The IEEE PES × PELS Joint Student Chapter at INSAT organized NRTF 3.0.",
   },
 ];
 

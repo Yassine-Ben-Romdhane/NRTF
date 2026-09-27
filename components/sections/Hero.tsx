@@ -2,7 +2,6 @@
 
 import NeuralBackground from "@/components/ui/flow-field-background";
 import { Typewriter } from "@/components/ui/typewriter-text";
-import CountdownTimer from "@/components/ui/countdown-timer";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { useRef } from "react";
@@ -77,7 +76,7 @@ export default function Hero() {
           {...fadeUp(0.35)}
           className="flex items-baseline gap-3 text-white/40 text-lg md:text-2xl font-display mb-8"
         >
-          <span>The event that unites</span>
+          <span>The 2026 edition united</span>
           <span
             style={{
               background: "linear-gradient(90deg, #6dd9cf, #137c55)",
@@ -101,30 +100,30 @@ export default function Hero() {
         {/* CTA Buttons */}
         <motion.div {...fadeUp(0.45)} className="flex flex-col sm:flex-row items-start gap-4 mb-10">
           <a
-            href="#register"
+            href="#about"
             className="relative text-sm font-semibold rounded-full h-12 ps-6 pe-14 flex items-center overflow-hidden group transition-all duration-500 hover:ps-14 hover:pe-6 bg-gradient-to-r from-nrtf-primary to-nrtf-secondary text-white shadow-[0_0_32px_rgba(109,217,207,0.2)] hover:shadow-[0_0_48px_rgba(109,217,207,0.3)]"
           >
-            <span className="relative z-10 transition-all duration-500 whitespace-nowrap">Register Now</span>
+            <span className="relative z-10 transition-all duration-500 whitespace-nowrap">Explore the edition</span>
             <div className="absolute right-1 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center transition-all duration-500 group-hover:right-[calc(100%-44px)] group-hover:rotate-45">
               <ArrowUpRight size={16} />
             </div>
           </a>
 
           <a
-            href="#about"
+            href="#schedule"
             className="relative text-sm font-semibold rounded-full h-12 ps-6 pe-14 flex items-center overflow-hidden group transition-all duration-500 hover:ps-14 hover:pe-6 border border-white/20 text-white/70 hover:border-nrtf-light/50 hover:text-white hover:bg-white/5"
           >
-            <span className="relative z-10 transition-all duration-500 whitespace-nowrap">Explore</span>
+            <span className="relative z-10 transition-all duration-500 whitespace-nowrap">View the program</span>
             <div className="absolute right-1 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center transition-all duration-500 group-hover:right-[calc(100%-44px)] group-hover:rotate-90">
               <ChevronDown size={16} />
             </div>
           </a>
         </motion.div>
 
-        {/* Countdown — horizontal, compact */}
+        {/* Completed-edition marker */}
         <motion.div {...fadeUp(0.55)}>
-          <p className="text-white/25 text-xs font-sans uppercase tracking-widest mb-3">Don&apos;t miss out</p>
-          <CountdownTimer compact />
+          <p className="text-nrtf-light/70 text-xs font-sans uppercase tracking-widest mb-2">2026 edition completed</p>
+          <p className="text-white/50 text-sm font-sans">1–3 May 2026 · Sousse, Tunisia</p>
         </motion.div>
       </motion.div>
 

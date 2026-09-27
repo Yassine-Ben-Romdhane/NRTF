@@ -80,8 +80,8 @@ export default function About() {
               className="flex flex-col gap-4"
             >
               <p className="font-sans text-base leading-relaxed" style={{ color: "rgba(248,250,252,0.62)" }}>
-                <strong className="text-nrtf-light font-semibold">National Re-Tech Fusion</strong> is
-                created by merging the IEEE PES × PELS Joint Student Chapter at INSAT — a vibrant
+                <strong className="text-nrtf-light font-semibold">National Re-Tech Fusion</strong> was
+                created by the IEEE PES × PELS Joint Student Chapter at INSAT — a vibrant
                 convergence of{" "}
                 <strong style={{ color: "#6dd9cf", fontWeight: 500 }}>renewable energy</strong>,{" "}
                 <strong style={{ color: "#137c55", fontWeight: 500 }}>electronics technologies</strong>,
@@ -90,7 +90,7 @@ export default function About() {
                 as a dynamic platform for knowledge exchange.
               </p>
               <p className="font-sans text-base leading-relaxed" style={{ color: "rgba(248,250,252,0.62)" }}>
-                Now in its 3rd edition, NRTF brings together students, professionals, and experts from
+                Its third edition brought together students, professionals, and experts from
                 across Tunisia and beyond for three days of innovation, competition, and collaboration.
               </p>
             </motion.div>

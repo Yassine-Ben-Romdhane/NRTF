@@ -82,7 +82,7 @@ const activities: Activity[] = [
     id: "pitching",
     tag: "Competition",
     tagline: "Pitch. Connect. Grow.",
-    desc: "Present your solutions to a panel of investors and decision-makers. Real feedback, real opportunities, and real prizes waiting for you.",
+    desc: "Hackathon teams presented their solutions to a panel of investors and decision-makers for feedback and prizes.",
     accent: "#6dd9cf",
     day: 3,
     time: "08:30",
@@ -301,9 +301,9 @@ export default function Activities() {
         >
           <WipeReveal delay={100} className="text-center">
             <h2 className="font-display text-4xl md:text-5xl text-nrtf-text leading-tight">
-              <span className="italic font-normal">What&apos;s</span>{" "}
+              <span className="italic font-normal">Highlights</span>{" "}
               <span className="font-bold">
-                happening{" "}
+                from{" "}
                 <span
                   style={{
                     background: "linear-gradient(135deg, #6dd9cf, #137c55)",
@@ -312,7 +312,7 @@ export default function Activities() {
                     backgroundClip: "text",
                   }}
                 >
-                  this year
+                  the 2026 program
                 </span>
               </span>
             </h2>
@@ -325,7 +325,7 @@ export default function Activities() {
             className="mt-4 font-sans text-base"
             style={{ color: "rgba(248,250,252,0.4)" }}
           >
-            Discover the exciting opportunities waiting for you at NRTF
+            Explore the activities featured in the NRTF 3.0 program
           </motion.p>
         </motion.div>
 

@@ -21,9 +21,9 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "National Re-Tech Fusion 3.0 | 1–3 Mai 2026",
+  title: "National Re-Tech Fusion 3.0 | 2026 Archive",
   description:
-    "The unique national event uniting Renewable Energy, Electronics Technologies, and Artificial Intelligence. Organized by IEEE PES & IEEE PELS at INSAT, Tunis.",
+    "Explore the 2026 National Re-Tech Fusion congress, held 1–3 May in Sousse by the IEEE PES × PELS Joint Student Chapter at INSAT.",
   keywords: ["NRTF", "IEEE", "renewable energy", "electronics", "AI", "INSAT", "Tunisia"],
 };
 
@@ -33,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`${alro.variable} ${syne.variable}`}>
+    <html lang="en" className={`${alro.variable} ${syne.variable}`}>
       <body className="antialiased">
         <ThemeProvider>{children}</ThemeProvider>
       </body>

@@ -1,57 +1,31 @@
-# NRTF 3.0
+# NRTF 3.0 conference website
 
-**National Retech Fusion 3.0** — official conference website built with Next.js 14, Tailwind CSS, and Framer Motion.
+Website for National Re-Tech Fusion 3.0, the IEEE PES × PELS student congress held 1–3 May 2026 in Sousse, Tunisia. The public site now serves as an archive of the program, organizers, and partners. Registration is closed; `POST /api/register` returns HTTP 410.
 
-## Stack
+[View the website](https://nrtf-three.vercel.app/)
 
-- **Framework:** Next.js 14 (App Router)
-- **Styling:** Tailwind CSS
-- **Animations:** Framer Motion
-- **Registration storage:** Google Sheets via service account
+## Engineering work
 
-## Local Development
+- Built the public event experience with Next.js 14, TypeScript, Tailwind CSS, and Framer Motion.
+- Implemented multi-step registration with server-side validation, duplicate prevention, rate limiting, transactional email, Supabase storage, and a Google Sheets backup during the event.
+- Built protected organizer and attendee flows, including room matching with relational tables and Row-Level Security policies.
+- Used versioned Supabase SQL migrations and deployed the site on Vercel.
 
-1. Clone the repo
-2. Install dependencies:
+The registration form has been removed from the public site. Its historical code remains available in Git history for reference, but the current registration endpoint does not accept submissions.
 
-   ```bash
-   npm install
-   ```
+## Run locally
 
-3. Copy the environment template and fill in your credentials:
-
-   ```bash
-   cp .env.example .env.local
-   ```
-
-4. Run the dev server:
-
-   ```bash
-   npm run dev
-   ```
-
-## Environment Variables
-
-See `.env.example` for the full list. You need a Google Cloud service account with access to the Google Sheets API.
-
-## Deployment (Vercel)
-
-1. Push this repo to GitHub
-2. Import the project at [vercel.com/new](https://vercel.com/new)
-3. Add your environment variables from `.env.local` in the Vercel dashboard under **Settings → Environment Variables**
-4. Deploy — Vercel auto-detects Next.js, no config needed
-
-## Project Structure
-
+```bash
+npm ci
+npm run dev
 ```
-app/
-  api/register/     # Registration API (POST → Google Sheets)
-  layout.tsx
-  page.tsx
-components/
-  layout/           # Navbar, Footer
-  sections/         # Page sections (Hero, About, Schedule, etc.)
-  ui/               # Reusable UI components
-public/             # Static assets (logo, fonts, video)
-data/               # Local data files
-```
+
+The archive homepage can be viewed without private credentials. Organizer and attendee features require the Supabase and email settings used for the event. Keep real credentials in `.env.local` or your deployment platform, never in Git. See `.env.example` for placeholder configuration.
+
+## Project structure
+
+- `app/` — pages, API routes, organizer and attendee flows
+- `components/` — sections, layout, and interface components
+- `lib/` — Supabase and email helpers
+- `supabase/migrations/` — database schema changes and policies
+- `public/` — event graphics and other assets

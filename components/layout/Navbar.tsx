@@ -55,12 +55,12 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Register CTA */}
+        {/* Archive CTA */}
         <a
-          href="#register"
+          href="#about"
           className="hidden md:inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-nrtf-primary to-nrtf-secondary text-white text-sm font-semibold hover:shadow-[0_0_20px_rgba(109,217,207,0.25)] transition-all duration-300 hover:scale-105"
         >
-          Register Now
+          Explore the edition
         </a>
 
         {/* Mobile toggle */}
@@ -90,11 +90,11 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="#register"
+            href="#about"
             onClick={handleLink}
             className="mt-4 flex items-center justify-center px-5 py-3 rounded-full bg-gradient-to-r from-nrtf-primary to-nrtf-secondary text-white font-semibold"
           >
-            Register Now
+            Explore the edition
           </a>
         </div>
       )}

@@ -59,7 +59,7 @@ export default function Sponsors() {
 
       {/* CTA */}
       <ScrollReveal delay={100} className="mt-16 text-center">
-        <p className="text-nrtf-muted/40 text-sm mb-4">Interested in sponsoring NRTF 3.0?</p>
+        <p className="text-nrtf-muted/40 text-sm mb-4">For future NRTF partnerships, contact the organizing team.</p>
         <a
           href="mailto:national.re.tech.fusion.ieee.insat@gmail.com"
           className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-nrtf-primary to-nrtf-secondary hover:opacity-90 hover:shadow-[0_0_24px_rgba(109,217,207,0.2)] transition-all duration-300"
